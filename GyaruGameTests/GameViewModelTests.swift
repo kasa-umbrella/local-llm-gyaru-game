@@ -10,7 +10,7 @@ struct GameViewModelTests {
         return GameViewModel(
             content: try GameContent.loadFromBundle(),
             repository: SaveRepository(container: container),
-            forceMock: true,
+            backend: .mock,
             mockGenerator: MockDialogueGenerator(characterDelay: .zero)
         )
     }
@@ -42,9 +42,9 @@ struct GameViewModelTests {
         try await readUntilChoices(game)
         #expect(game.choices.count == 3)
 
-        // kind（提案+2）× ひよりの相性 kind:0 → +2
+        // kind: 基準+2 相性0 LLM+1（提案+2 を ±1 に丸める）→ +3
         game.choose(game.choices[0])
-        #expect(game.currentAffection == 2)
+        #expect(game.currentAffection == 3)
         #expect(game.progress.turnInScene == 1)
 
         for _ in 0..<2 {
@@ -64,6 +64,6 @@ struct GameViewModelTests {
         #expect(game.directive?.scene.id == "c2_hiyori")
         #expect(game.heroine?.id == "hiyori")
         #expect(game.progress.chapterIndex == 1)
-        #expect(game.progress.affection == 6)
+        #expect(game.progress.affection == 9)
     }
 }

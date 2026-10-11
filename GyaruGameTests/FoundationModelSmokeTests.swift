@@ -34,7 +34,8 @@ struct FoundationModelSmokeTests {
         }
         let turn = try #require(final)
         #expect(!turn.lines.isEmpty)
-        #expect(turn.choices.count == 3)
+        #expect(turn.lines.allSatisfy { !$0.text.isEmpty })
+        #expect(turn.choices.count == FoundationModelDialogueGenerator.choiceCount)
 
         print("---- \(heroine.name) / \(directive.scene.location) ----")
         turn.lines.forEach { print("[\($0.emotion)] \($0.text)") }

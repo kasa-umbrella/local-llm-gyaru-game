@@ -82,8 +82,7 @@ struct DialogueWindow: View {
                 .font(NovelTheme.font(metrics.bodyFontSize))
                 .lineSpacing(metrics.bodyLineSpacing)
                 .lineLimit(metrics.bodyLineLimit)
-                .minimumScaleFactor(0.8)
-                .novelTextOutline()
+                .minimumScaleFactor(NovelTheme.minimumScale(for: metrics.bodyFontSize))
                 .padding(.leading, isNarration ? 12 : 0)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
@@ -93,9 +92,9 @@ struct DialogueWindow: View {
                 quickMenu
             }
         }
-        .padding(.top, metrics.namePlateSize.height * 0.5 + 14)
-        .padding(.horizontal, metrics.isCompact ? 18 : 32)
-        .padding(.bottom, 10)
+        .padding(.top, metrics.windowTopInset)
+        .padding(.horizontal, metrics.windowHorizontalPadding)
+        .padding(.bottom, metrics.windowBottomInset)
         .frame(maxWidth: metrics.windowMaxWidth)
         .frame(height: metrics.windowHeight)
         .novelPanel(cornerRadius: 14)
@@ -153,24 +152,10 @@ struct NamePlate: View {
             .font(NovelTheme.font(metrics.nameFontSize, bold: true))
             .foregroundStyle(.white)
             .lineLimit(1)
-            .minimumScaleFactor(0.6)
-            .novelTextOutline()
+            .minimumScaleFactor(NovelTheme.minimumScale(for: metrics.nameFontSize))
             .padding(.horizontal, 12)
             .frame(width: metrics.namePlateSize.width, height: metrics.namePlateSize.height)
-            .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(
-                        LinearGradient(
-                            colors: [color.mix(with: .black, by: 0.15), color.mix(with: .black, by: 0.45)],
-                            startPoint: .top, endPoint: .bottom
-                        )
-                    )
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8)
-                            .strokeBorder(.white.opacity(0.75), lineWidth: 1.5)
-                    }
-                    .shadow(color: .black.opacity(0.4), radius: 4, y: 2)
-            }
+            .background(color.mix(with: .black, by: 0.35), in: .rect(cornerRadius: 8))
     }
 }
 
@@ -181,7 +166,7 @@ struct ChoiceList: View {
     let onSelect: (ChoiceOption) -> Void
 
     var body: some View {
-        VStack(spacing: metrics.isCompact ? 12 : 16) {
+        VStack(spacing: metrics.choiceSpacing) {
             ForEach(choices) { choice in
                 Button(choice.text) { onSelect(choice) }
                     .buttonStyle(NovelButtonStyle(size: metrics.choiceSize, fontSize: metrics.choiceFontSize))
@@ -204,7 +189,7 @@ struct DebugAffectionLabel: View {
                     .foregroundStyle(delta > 0 ? NovelTheme.accent : .cyan)
             }
         }
-        .font(.caption.monospacedDigit())
+        .font(.system(size: NovelTheme.minimumFontSize).monospacedDigit())
         .foregroundStyle(.white)
         .padding(.horizontal, 8)
         .padding(.vertical, 4)

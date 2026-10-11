@@ -31,18 +31,7 @@ struct SceneBackgroundView: View {
                 }
                 .clipped()
         } else {
-            LinearGradient(colors: Self.placeholderColors(for: name), startPoint: .top, endPoint: .bottom)
-        }
-    }
-
-    private static func placeholderColors(for name: String) -> [Color] {
-        switch name {
-        case "bookcafe": [Color(hex: "#5B4636"), Color(hex: "#2E2219")]
-        case "rooftop": [Color(hex: "#8FD3FF"), Color(hex: "#E8F6FF")]
-        case "izakaya": [Color(hex: "#E0803C"), Color(hex: "#4A1F12")]
-        case "festival": [Color(hex: "#1B1446"), Color(hex: "#C2185B")]
-        case "hill_night": [Color(hex: "#0B1033"), Color(hex: "#3A2C6B")]
-        default: [Color(hex: "#444444"), Color(hex: "#111111")]
+            NovelTheme.placeholderBackground
         }
     }
 }
@@ -64,32 +53,22 @@ struct HeroineSpriteView: View {
         }
     }
 
+    /// 立ち絵が用意されるまでのシルエット
     private var placeholder: some View {
-        VStack(spacing: 16) {
-            Image(systemName: emotion.symbolName)
-                .font(.system(size: 64))
-                .contentTransition(.symbolEffect(.replace))
-            Image(systemName: "figure.stand.dress")
-                .font(.system(size: 220))
-                .minimumScaleFactor(0.4)
-            Text(heroine.name)
-                .font(.title2.bold())
-        }
-        .foregroundStyle(Color(hex: heroine.themeColor).gradient)
-        .shadow(color: .black.opacity(0.35), radius: 12, y: 6)
-    }
-}
-
-extension Emotion {
-    var symbolName: String {
-        switch self {
-        case .normal: "face.smiling"
-        case .smile: "face.smiling.inverse"
-        case .shy: "heart.circle"
-        case .angry: "flame"
-        case .sad: "cloud.rain"
-        case .surprised: "exclamationmark.circle"
-        }
+        Image(systemName: "figure.stand.dress")
+            .resizable()
+            .scaledToFit()
+            .frame(maxHeight: 420)
+            .foregroundStyle(Color(hex: heroine.themeColor).mix(with: .black, by: 0.2))
+            #if DEBUG
+            .overlay(alignment: .top) {
+                Text(emotion.rawValue)
+                    .font(.system(size: NovelTheme.minimumFontSize).monospaced())
+                    .foregroundStyle(.white)
+                    .padding(4)
+                    .background(.black.opacity(0.5), in: .rect(cornerRadius: 4))
+            }
+            #endif
     }
 }
 

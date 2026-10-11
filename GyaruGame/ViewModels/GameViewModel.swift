@@ -23,11 +23,21 @@ final class GameViewModel {
     private let retriever: LoreRetriever
     private let repository: SaveRepository
     private let foundationGenerator = FoundationModelDialogueGenerator()
+    private let localGenerator = LocalLLMDialogueGenerator()
     private let mockGenerator: MockDialogueGenerator
 
-    /// Foundation Models が使えない場合のメッセージ（使えるなら nil）
-    let modelUnavailableMessage: String?
-    var usesMock: Bool
+    /// Apple のオンデバイスモデルが使えない場合のメッセージ（使えるなら nil）
+    let appleModelUnavailableMessage: String?
+    private(set) var localModelState: LocalModelState = .notDownloaded
+    private var localModelTask: Task<Void, Never>?
+
+    var backend: LLMBackend {
+        didSet {
+            guard backend != oldValue else { return }
+            backend.save()
+            if backend == .local { refreshLocalModel() }
+        }
+    }
 
     private(set) var screen: Screen = .title
     private(set) var progress = GameProgress(heroineID: "")
@@ -49,13 +59,17 @@ final class GameViewModel {
     private var generationTask: Task<Void, Never>?
 
     private var generator: DialogueGenerating {
-        usesMock ? mockGenerator : foundationGenerator
+        switch backend {
+        case .local: localGenerator
+        case .apple: foundationGenerator
+        case .mock: mockGenerator
+        }
     }
 
     init(
         content: GameContent,
         repository: SaveRepository,
-        forceMock: Bool = false,
+        backend: LLMBackend? = nil,
         mockGenerator: MockDialogueGenerator = MockDialogueGenerator()
     ) {
         self.content = content
@@ -63,8 +77,52 @@ final class GameViewModel {
         self.mockGenerator = mockGenerator
         director = StoryDirector(chapters: content.chapters)
         retriever = LoreRetriever(entries: content.lore)
-        modelUnavailableMessage = FoundationModelDialogueGenerator.availability.unavailableMessage
-        usesMock = forceMock || modelUnavailableMessage != nil
+        appleModelUnavailableMessage = FoundationModelDialogueGenerator.availability.unavailableMessage
+        self.backend = backend ?? .saved
+        if self.backend == .local { refreshLocalModel() }
+    }
+
+    // MARK: - ローカルLLMの準備
+
+    /// ダウンロード済みならメモリに読み込む。未ダウンロードなら何もしない（容量が大きいので勝手に落とさない）
+    func refreshLocalModel() {
+        guard localModelState != .ready, localModelTask == nil else { return }
+        localModelTask = Task {
+            defer { localModelTask = nil }
+            if await localGenerator.isDownloaded() {
+                await loadLocalModel()
+            } else {
+                localModelState = .notDownloaded
+            }
+        }
+    }
+
+    /// ユーザーの操作でダウンロード（と読み込み）を始める
+    func downloadLocalModel() {
+        guard localModelTask == nil else { return }
+        localModelTask = Task {
+            defer { localModelTask = nil }
+            await loadLocalModel()
+        }
+    }
+
+    private func loadLocalModel() async {
+        localModelState = .loading
+        do {
+            try await localGenerator.preload()
+            localModelState = .ready
+        } catch {
+            localModelState = .failed(error.localizedDescription)
+        }
+    }
+
+    /// 選んでいるエンジンで今すぐ遊べるか
+    var isBackendReady: Bool {
+        switch backend {
+        case .local: localModelState == .ready
+        case .apple: appleModelUnavailableMessage == nil
+        case .mock: true
+        }
     }
 
     // MARK: - 表示用

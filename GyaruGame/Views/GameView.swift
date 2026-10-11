@@ -1,10 +1,28 @@
 import SwiftUI
 
-/// 背景（全画面）＋ヒロイン（中央）＋セリフボックス（下）
+/// 背景（全画面）＋ヒロイン（中央）＋テキストウィンドウ（下）
 struct GameView: View {
     @Environment(GameViewModel.self) private var game
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @State private var typewriter = Typewriter()
     @State private var showsBacklog = false
+    @State private var isAutoOn = false
+    @State private var isSkipOn = false
+
+    private static let playerNameColor = Color(white: 0.55)
+
+    private var metrics: NovelTheme.Metrics {
+        NovelTheme.Metrics(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
+    }
+
+    /// 表示中の行を一意に表すキー。変わったら文字送りを最初からやり直す
+    private var lineKey: Int {
+        var hasher = Hasher()
+        hasher.combine(game.directive?.scene.id)
+        hasher.combine(game.cursor)
+        return hasher.finalize()
+    }
 
     var body: some View {
         ZStack {
@@ -15,141 +33,228 @@ struct GameView: View {
             if let heroine = game.heroine {
                 HeroineSpriteView(heroine: heroine, emotion: game.currentEmotion)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.bottom, 120)
+                    .padding(.top, metrics.isShort ? 24 : 60)
+                    .padding(.bottom, metrics.windowHeight * 0.55)
                     .animation(.easeInOut(duration: 0.25), value: game.currentEmotion)
             }
 
-            VStack(spacing: 20) {
+            VStack(spacing: 0) {
                 header
-                Spacer()
+                Spacer(minLength: metrics.isShort ? 4 : 12)
                 if game.showsChoices {
-                    ChoiceList(choices: game.choices, onSelect: game.choose)
-                        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+                    ChoiceList(metrics: metrics, choices: game.choices) { choice in
+                        game.choose(choice)
+                    }
+                    .transition(.opacity)
                 }
+                Spacer(minLength: metrics.isShort ? 4 : 12)
                 if let notice = game.notice {
                     Text(notice)
-                        .font(.caption)
+                        .font(NovelTheme.font(13))
+                        .foregroundStyle(NovelTheme.text)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .glassEffect(.regular.tint(.orange.opacity(0.3)), in: .capsule)
+                        .background(.black.opacity(0.55), in: .rect(cornerRadius: 6))
+                        .padding(.bottom, 8)
                 }
-                DialogueBox(
-                    line: game.currentLine,
-                    accentColor: game.heroine.map { Color(hex: $0.themeColor) } ?? .gray,
-                    isGenerating: game.isGenerating,
-                    canAdvance: game.canAdvance,
-                    onAdvance: game.advance
-                )
-                .frame(maxWidth: 1000)
+                dialogueWindow
+                    .padding(.top, metrics.namePlateSize.height * 0.5)
             }
-            .padding(horizontalSizeClass == .compact ? 12 : 24)
-            .animation(.easeInOut(duration: 0.2), value: game.showsChoices)
+            .padding(metrics.screenPadding)
+            .animation(.easeOut(duration: 0.18), value: game.showsChoices)
 
             if game.isTransitioning {
-                transitionOverlay
+                loadingOverlay
             }
+
+            if showsBacklog {
+                BacklogOverlay(metrics: metrics, logs: game.backlog) { showsBacklog = false }
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: showsBacklog)
+        #if DEBUG
+        .onAppear {
+            // 開発用: `-autoMode` で起動するとオートをオンにして始める
+            if CommandLine.arguments.contains("-autoMode") { isAutoOn = true }
+        }
+        #endif
+        .onChange(of: lineKey, initial: true) { updateTypewriter() }
+        .onChange(of: game.currentLine?.text) { updateTypewriter() }
+        .onChange(of: game.showsChoices) { _, shows in
+            if shows { isSkipOn = false }
+        }
+        .task(id: AutoAdvanceKey(lineKey: lineKey, isTyping: typewriter.isTyping, canAdvance: game.canAdvance, isAutoOn: isAutoOn, isSkipOn: isSkipOn)) {
+            await autoAdvanceIfNeeded()
         }
         .focusable()
         .focusEffectDisabled()
         .onKeyPress(keys: [.space, .return]) { _ in
-            game.advance()
+            handleAdvance()
             return .handled
         }
-        .sheet(isPresented: $showsBacklog) {
-            BacklogView(logs: game.backlog)
-        }
     }
 
-    /// iPhone の縦画面では章タイトルとボタン類を2段に分ける
-    @ViewBuilder
+    // MARK: - パーツ
+
     private var header: some View {
-        if horizontalSizeClass == .compact {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 8) {
-                    AffectionBadge(affection: game.currentAffection, delta: game.lastAffectionDelta)
-                    Spacer()
-                    headerButtons
-                }
-                chapterLabel
+        HStack(alignment: .top) {
+            if let directive = game.directive {
+                Text("第\(directive.chapterNumber)章　\(directive.scene.location)")
+                    .font(NovelTheme.font(metrics.chapterFontSize))
+                    .foregroundStyle(NovelTheme.text)
+                    .lineLimit(1)
+                    .minimumScaleFactor(NovelTheme.minimumScale(for: metrics.chapterFontSize))
+                    .padding(.horizontal, 14)
+                    .frame(width: metrics.chapterPlateSize.width, height: metrics.chapterPlateSize.height, alignment: .leading)
+                    .novelPanel(cornerRadius: 6)
             }
-        } else {
-            HStack(spacing: 12) {
-                chapterLabel
-                Spacer()
-                AffectionBadge(affection: game.currentAffection, delta: game.lastAffectionDelta)
-                headerButtons
-            }
+            Spacer()
+            #if DEBUG
+            DebugAffectionLabel(affection: game.currentAffection, delta: game.lastAffectionDelta)
+            #endif
         }
     }
 
-    @ViewBuilder
-    private var chapterLabel: some View {
-        if let directive = game.directive {
-            Text("第\(directive.chapterNumber)章 \(directive.chapterTitle)　\(directive.scene.location)")
-                .font(.callout.weight(.semibold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .glassEffect(.regular, in: .capsule)
-        }
+    private var dialogueWindow: some View {
+        let line = game.currentLine
+        let speaker = line?.speaker
+        return DialogueWindow(
+            metrics: metrics,
+            speaker: speaker,
+            speakerColor: speaker == GameConstants.playerName
+                ? Self.playerNameColor
+                : game.heroine.map { Color(hex: $0.themeColor) } ?? .gray,
+            text: typewriter.attributedText(color: NovelTheme.text),
+            isNarration: line != nil && speaker == nil,
+            indicator: indicator,
+            isAutoOn: isAutoOn,
+            isSkipOn: isSkipOn,
+            onAdvance: {
+                isSkipOn = false
+                handleAdvance()
+            },
+            onLog: { showsBacklog = true },
+            onAuto: {
+                isAutoOn.toggle()
+                isSkipOn = false
+            },
+            onSkip: {
+                isSkipOn.toggle()
+                isAutoOn = false
+                if isSkipOn { typewriter.complete() }
+            },
+            onTitle: game.returnToTitle
+        )
     }
 
-    private var headerButtons: some View {
-        GlassEffectContainer {
-            HStack(spacing: 8) {
-                Button("ログ", systemImage: "text.bubble") { showsBacklog = true }
-                Button("タイトル", systemImage: "house") { game.returnToTitle() }
-            }
-            .labelStyle(.iconOnly)
-            .buttonStyle(.glass)
-            .controlSize(.large)
-        }
+    private var indicator: DialogueWindow.Indicator {
+        if typewriter.isTyping { return .none }
+        if game.canAdvance { return .next }
+        return game.isGenerating ? .waiting : .none
     }
 
-    private var transitionOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.35).ignoresSafeArea()
-            VStack(spacing: 12) {
+    private var loadingOverlay: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Color.black.opacity(0.3).ignoresSafeArea()
+            HStack(spacing: 10) {
                 ProgressView()
-                Text("思い出を整理しています……")
-                    .font(.callout)
+                    .controlSize(.small)
+                    .tint(.white)
+                Text("NOW LOADING")
+                    .font(NovelTheme.font(14))
+                    .foregroundStyle(.white)
+                    .novelTextOutline()
             }
-            .padding(28)
-            .glassEffect(.regular, in: .rect(cornerRadius: 24))
+            .padding(metrics.screenPadding + 8)
         }
         .transition(.opacity)
     }
+
+    // MARK: - 進行
+
+    private func updateTypewriter() {
+        typewriter.show(game.currentLine?.text ?? "", key: lineKey, instant: isSkipOn)
+    }
+
+    /// 文字送り中なら全文を表示し、表示し終わっていれば次の行へ
+    private func handleAdvance() {
+        guard !showsBacklog else { return }
+        if typewriter.isTyping {
+            typewriter.complete()
+        } else {
+            game.advance()
+        }
+    }
+
+    private func autoAdvanceIfNeeded() async {
+        guard isAutoOn || isSkipOn, !typewriter.isTyping, game.canAdvance, !showsBacklog else { return }
+        let wait: Duration = isSkipOn
+            ? .milliseconds(80)
+            : .seconds(1.0) + .milliseconds(40 * typewriter.text.count)
+        try? await Task.sleep(for: wait)
+        guard !Task.isCancelled else { return }
+        game.advance()
+    }
+
+    private struct AutoAdvanceKey: Hashable {
+        let lineKey: Int
+        let isTyping: Bool
+        let canAdvance: Bool
+        let isAutoOn: Bool
+        let isSkipOn: Bool
+    }
 }
 
-struct BacklogView: View {
+/// 全画面のバックログ。名前の列は常に同じ幅
+struct BacklogOverlay: View {
+    let metrics: NovelTheme.Metrics
     let logs: [DialogueLog]
-    @Environment(\.dismiss) private var dismiss
+    let onClose: () -> Void
 
     var body: some View {
-        NavigationStack {
-            ScrollViewReader { proxy in
-                List(logs) { log in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(log.speaker)
-                            .font(.caption.bold())
-                            .foregroundStyle(log.speaker == GameConstants.playerName ? .blue : .pink)
-                        Text(log.text)
+        ZStack {
+            Color.black.opacity(0.8)
+                .ignoresSafeArea()
+                .onTapGesture(perform: onClose)
+
+            VStack(spacing: 16) {
+                HStack {
+                    Text("バックログ")
+                        .font(NovelTheme.font(metrics.isCompact ? 18 : 22, bold: true))
+                        .foregroundStyle(NovelTheme.text)
+                    Spacer()
+                    Button("閉じる", action: onClose)
+                        .buttonStyle(NovelButtonStyle(size: CGSize(width: 110, height: 38), fontSize: 15))
+                }
+
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 18) {
+                            ForEach(logs) { log in
+                                HStack(alignment: .firstTextBaseline, spacing: 16) {
+                                    Text(log.speaker)
+                                        .font(NovelTheme.font(metrics.isCompact ? 13 : 15, bold: true))
+                                        .foregroundStyle(log.speaker == GameConstants.playerName ? Color(white: 0.78) : NovelTheme.accent)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(NovelTheme.minimumScale(for: metrics.isCompact ? 13 : 15))
+                                        .frame(width: metrics.isCompact ? 84 : 110, alignment: .trailing)
+                                    Text(log.text)
+                                        .font(NovelTheme.font(metrics.isCompact ? 15 : 17))
+                                        .foregroundStyle(NovelTheme.text)
+                                        .lineSpacing(4)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .id(log.order)
+                            }
+                        }
+                        .padding(.vertical, 8)
                     }
-                    .padding(.vertical, 2)
-                    .id(log.order)
-                }
-                .onAppear { proxy.scrollTo(logs.last?.order, anchor: .bottom) }
-            }
-            .navigationTitle("バックログ")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("閉じる") { dismiss() }
+                    .onAppear { proxy.scrollTo(logs.last?.order, anchor: .bottom) }
                 }
             }
+            .padding(metrics.screenPadding + 8)
+            .frame(maxWidth: 960)
         }
-        #if os(macOS)
-        .frame(minWidth: 520, minHeight: 560)
-        #endif
     }
 }

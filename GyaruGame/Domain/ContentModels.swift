@@ -20,6 +20,29 @@ nonisolated enum ChoiceTone: String, Codable, CaseIterable, Sendable {
     case kind, teasing, honest, cool, romantic, rude
 }
 
+extension ChoiceTone {
+    /// 選択肢を生成するときにモデルへ渡す方向性
+    nonisolated var instruction: String {
+        switch self {
+        case .kind: "優しく受け止める"
+        case .teasing: "軽くからかう"
+        case .honest: "素直な気持ちを言う"
+        case .cool: "そっけなく返す"
+        case .romantic: "少しドキッとさせる"
+        case .rude: "失礼な態度をとる"
+        }
+    }
+
+    /// 1ターンの選択肢3つの方向性。毎回「好意的・攻め・引き」が1つずつ並ぶようにし、順番は混ぜる
+    nonisolated static func plannedSet() -> [ChoiceTone] {
+        [
+            [ChoiceTone.kind, .honest].randomElement()!,
+            [ChoiceTone.teasing, .romantic].randomElement()!,
+            [ChoiceTone.cool, .cool, .rude].randomElement()!,
+        ].shuffled()
+    }
+}
+
 nonisolated struct Heroine: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let name: String

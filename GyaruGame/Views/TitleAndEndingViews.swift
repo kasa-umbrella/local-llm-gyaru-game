@@ -22,55 +22,40 @@ struct ContentView: View {
 
 struct TitleView: View {
     @Environment(GameViewModel.self) private var game
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
+    private var metrics: NovelTheme.Metrics {
+        NovelTheme.Metrics(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
+    }
 
     var body: some View {
-        @Bindable var game = game
-
         ZStack {
             SceneBackgroundView(name: "office_building_night")
                 .ignoresSafeArea()
 
-            VStack(spacing: 32) {
-                VStack(spacing: 8) {
-                    Text("定時後ローカルLLM")
-                        .font(.system(size: 56, weight: .heavy, design: .rounded))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
-                    Text("オンデバイスAIで紡ぐ、大人たちの恋の物語")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 24)
-                .shadow(radius: 8)
+            VStack(spacing: 0) {
+                Spacer()
+                Text("定時後ローカルLLM")
+                    .font(NovelTheme.font(metrics.isCompact ? 36 : 60, bold: true))
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .novelTextOutline()
+                    .padding(.horizontal, metrics.screenPadding)
+                Spacer()
 
-                GlassEffectContainer(spacing: 14) {
-                    VStack(spacing: 14) {
-                        Button(action: game.showHeroineSelect) {
-                            Text("はじめから").frame(width: 240)
-                        }
-                        Button(action: game.continueGame) {
-                            Text("つづきから").frame(width: 240)
-                        }
-                        .disabled(!game.hasContinuableSave)
-                    }
-                    .buttonStyle(.glass)
-                    .controlSize(.extraLarge)
+                VStack(spacing: 14) {
+                    Button("はじめから", action: game.showHeroineSelect)
+                        .disabled(!game.isBackendReady)
+                    Button("つづきから", action: game.continueGame)
+                        .disabled(!game.hasContinuableSave || !game.isBackendReady)
                 }
+                .buttonStyle(NovelButtonStyle(size: metrics.menuButtonSize, fontSize: 19))
 
-                VStack(spacing: 8) {
-                    Toggle("モックLLMで遊ぶ（開発用）", isOn: $game.usesMock)
-                        .disabled(game.modelUnavailableMessage != nil)
-                    if let message = game.modelUnavailableMessage {
-                        Label(message, systemImage: "exclamationmark.triangle")
-                            .foregroundStyle(.orange)
-                    }
-                }
-                .font(.callout)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .glassEffect(.regular, in: .rect(cornerRadius: 16))
+                EngineSelector()
+                    .padding(.top, metrics.isShort ? 14 : 28)
+                    .padding(.bottom, metrics.screenPadding + 12)
             }
         }
     }
@@ -78,7 +63,13 @@ struct TitleView: View {
 
 struct EndingView: View {
     @Environment(GameViewModel.self) private var game
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     let ending: Ending
+
+    private var metrics: NovelTheme.Metrics {
+        NovelTheme.Metrics(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
+    }
 
     private var heroine: Heroine? {
         game.content.heroine(id: ending.heroineID)
@@ -89,23 +80,25 @@ struct EndingView: View {
             SceneBackgroundView(name: ending.kind == .good ? "hill_night" : "riverside_evening")
                 .ignoresSafeArea()
 
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
                 if let heroine {
-                    HeroinePortrait(heroine: heroine, size: 120)
+                    HeroinePortrait(heroine: heroine, size: 104)
                 }
                 Text(title)
-                    .font(.system(size: 44, weight: .bold, design: .rounded))
+                    .font(NovelTheme.font(metrics.isCompact ? 28 : 36, bold: true))
+                    .foregroundStyle(NovelTheme.accent)
                 Text(message)
-                    .font(.title3)
+                    .font(NovelTheme.font(metrics.isCompact ? 15 : 18))
+                    .foregroundStyle(NovelTheme.text)
+                    .lineSpacing(6)
                     .multilineTextAlignment(.center)
-                Button("タイトルへ戻る", action: game.returnToTitle)
-                    .buttonStyle(.glass)
-                    .controlSize(.extraLarge)
+                    .frame(maxHeight: .infinity)
+                Button("タイトルへ", action: game.returnToTitle)
+                    .buttonStyle(NovelButtonStyle(size: metrics.menuButtonSize, fontSize: 18))
             }
-            .padding(40)
-            .frame(maxWidth: 720)
-            .glassEffect(.regular, in: .rect(cornerRadius: 32))
-            .padding(24)
+            .padding(28)
+            .frame(width: metrics.endingWindowSize.width, height: metrics.endingWindowSize.height)
+            .novelPanel(cornerRadius: 16)
         }
     }
 
@@ -120,9 +113,9 @@ struct EndingView: View {
     private var message: String {
         let name = heroine?.name ?? ""
         return switch ending.kind {
-        case .good: "花火の光の中で、\(name)と手をつないだ。\nこれからは、二人で同じ景色を見ていく。"
-        case .normal: "\(name)とは、少しだけ特別な友達になれた。\nこの関係の続きは、また来年の夏に。"
-        case .bad: "\(name)の気持ちに、最後まで気づけなかった。\n花火の音だけが、やけに大きく響いていた。"
+        case .good: "花火が終わっても、\(name)はつないだ手を離さなかった。"
+        case .normal: "\(name)とは、また来週も会う約束をした。\n今はまだ、それで十分だった。"
+        case .bad: "\(name)が何を言いかけたのか、\n最後まで聞けないままだった。"
         }
     }
 }

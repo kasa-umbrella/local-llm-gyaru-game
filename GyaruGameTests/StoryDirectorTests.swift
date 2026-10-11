@@ -57,13 +57,18 @@ struct AffectionEngineTests {
         fallbackLines: [], themeColor: "#FFFFFF"
     )
 
-    @Test func addsTonePreferenceToSuggestion() {
+    @Test func combinesToneBasePreferenceAndLLMAdjustment() {
+        // teasing: 基準+1 相性+1 LLM+1
         #expect(engine.delta(for: ChoiceOption(text: "", tone: .teasing, suggestedDelta: 2), heroine: heroine) == 3)
+        // cool: 基準-1 相性0 LLM0
+        #expect(engine.delta(for: ChoiceOption(text: "", tone: .cool, suggestedDelta: 0), heroine: heroine) == -1)
+        // rude: 基準-3 相性-2 LLM-1 → 1ターンの下限 -5
         #expect(engine.delta(for: ChoiceOption(text: "", tone: .rude, suggestedDelta: -3), heroine: heroine) == -5)
     }
 
-    @Test func clampsOutOfRangeSuggestion() {
+    @Test func llmSuggestionOnlyAdjustsByOne() {
         #expect(engine.delta(for: ChoiceOption(text: "", tone: .kind, suggestedDelta: 99), heroine: heroine) == 3)
+        #expect(engine.delta(for: ChoiceOption(text: "", tone: .kind, suggestedDelta: -99), heroine: heroine) == 1)
     }
 
     @Test func clampsTotalAffection() {

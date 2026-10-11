@@ -19,7 +19,7 @@ struct GyaruGameApp: App {
         _game = State(initialValue: GameViewModel(
             content: content,
             repository: SaveRepository(container: container),
-            forceMock: CommandLine.arguments.contains("-useMockLLM")
+            backend: CommandLine.arguments.contains("-useMockLLM") ? .mock : nil
         ))
     }
 

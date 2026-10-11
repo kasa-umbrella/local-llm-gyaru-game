@@ -1,13 +1,25 @@
 import Foundation
 
-/// LLM が提案した好感度変化を、ヒロインの相性表で補正してクランプする
+/// 好感度の変化量 = 返答の方向性ごとの基準値 + ヒロインの相性表 + LLM の判定（微調整）。
+/// オンデバイスモデルの判定はほぼ同じ値しか返さないため、主役は基準値と相性表にして、
+/// LLM の判定は ±1 の範囲でだけ効かせる。
 nonisolated struct AffectionEngine: Sendable {
-    static let suggestedRange = -3...3
+    static let llmAdjustmentRange = -1...1
     static let perTurnRange = -5...5
 
+    static func baseDelta(for tone: ChoiceTone) -> Int {
+        switch tone {
+        case .kind, .honest: 2
+        case .teasing, .romantic: 1
+        case .cool: -1
+        case .rude: -3
+        }
+    }
+
     func delta(for choice: ChoiceOption, heroine: Heroine) -> Int {
-        let suggested = choice.suggestedDelta.clamped(to: Self.suggestedRange)
-        return (suggested + heroine.preference(for: choice.tone)).clamped(to: Self.perTurnRange)
+        let adjustment = choice.suggestedDelta.clamped(to: Self.llmAdjustmentRange)
+        return (Self.baseDelta(for: choice.tone) + heroine.preference(for: choice.tone) + adjustment)
+            .clamped(to: Self.perTurnRange)
     }
 
     func apply(_ delta: Int, to current: Int) -> Int {

@@ -1,9 +1,20 @@
 import Foundation
 import FoundationModels
 
-/// Apple Foundation Models（オンデバイス LLM）による生成
+/// Apple Foundation Models（オンデバイス LLM）による生成。
+///
+/// 既定のガードレールは「恋愛ゲームのキャラのセリフを書く」という文脈そのものに反応し、
+/// 構造化出力（@Generable）では入力段階でほぼ全て弾かれる。そこで1ターンを次の3段に分けている。
+/// 1. セリフ: permissiveContentTransformations の文字列出力（ストリーミング）
+/// 2. 選択肢: 同じく文字列出力。方向性はシステムが決めて渡す
+/// 3. 表情・好感度: contentTagging の構造化出力。キャラ設定や場面を含まない短い入力だけで判定する
 final class FoundationModelDialogueGenerator: DialogueGenerating {
-    private let model = SystemLanguageModel.default
+    /// ガードレールの判定は確率的なので、何も表示していない段階で弾かれたときだけ作り直して再挑戦する
+    static let guardrailRetryLimit = 2
+    static let choiceCount = 3
+
+    private let dialogueModel = SystemLanguageModel(guardrails: .permissiveContentTransformations)
+    private let taggingModel = SystemLanguageModel(useCase: .contentTagging)
     private var warmedSession: (heroineID: String, session: LanguageModelSession)?
 
     static var availability: SystemLanguageModel.Availability {
@@ -11,38 +22,30 @@ final class FoundationModelDialogueGenerator: DialogueGenerating {
     }
 
     func prewarm(for heroine: Heroine) {
-        let session = makeSession(for: heroine)
+        let session = makeLineSession(for: heroine)
         session.prewarm()
         warmedSession = (heroine.id, session)
     }
 
     func streamTurn(_ request: TurnRequest) -> AsyncThrowingStream<TurnDraft, Error> {
-        let session = takeSession(for: request.heroine)
+        let heroine = request.heroine
         let prompt = PromptBuilder.turnPrompt(request)
-        let speaker = request.heroine.name
+        let needsChoices = request.directive.phase != .closing
+        let firstSession = takeSession(for: heroine)
 
         return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
-                    let stream = session.streamResponse(
-                        to: prompt,
-                        generating: GeneratedTurn.self,
-                        options: GenerationOptions(temperature: 0.8)
-                    )
-                    var last: GeneratedContent?
-                    for try await snapshot in stream {
-                        last = snapshot.rawContent
-                        let lines = (snapshot.content.lines ?? []).compactMap { partial -> DialogueLine? in
-                            guard let text = partial.text, !text.isEmpty else { return nil }
-                            return DialogueLine(speaker: speaker, text: text, emotion: partial.emotion ?? .normal)
-                        }
-                        continuation.yield(TurnDraft(lines: lines, choices: [], isFinal: false))
+                    let text = try await self.streamLine(prompt: prompt, heroine: heroine, firstSession: firstSession) { partial in
+                        continuation.yield(TurnDraft(lines: [DialogueLine(speaker: heroine.name, text: partial)], choices: [], isFinal: false))
                     }
-                    guard let last else { throw CancellationError() }
-                    let turn = try GeneratedTurn(last)
+                    let emotion = await self.emotion(for: text)
+                    let choices = needsChoices
+                        ? await self.choices(heroine: heroine, directive: request.directive, heroineLine: text)
+                        : []
                     continuation.yield(TurnDraft(
-                        lines: turn.lines.map { DialogueLine(speaker: speaker, text: $0.text, emotion: $0.emotion) },
-                        choices: turn.choices.map { ChoiceOption(text: $0.text, tone: $0.tone, suggestedDelta: $0.affectionDelta) },
+                        lines: [DialogueLine(speaker: heroine.name, text: text, emotion: emotion)],
+                        choices: choices,
                         isFinal: true
                     ))
                     continuation.finish()
@@ -55,19 +58,89 @@ final class FoundationModelDialogueGenerator: DialogueGenerating {
     }
 
     func summarize(_ request: SummaryRequest) async throws -> String {
-        let session = LanguageModelSession(model: model, instructions: PromptBuilder.summaryInstructions)
+        let session = LanguageModelSession(model: dialogueModel, instructions: PromptBuilder.summaryInstructions)
         let response = try await session.respond(
             to: PromptBuilder.summaryPrompt(request),
-            generating: GeneratedSummary.self,
             options: GenerationOptions(temperature: 0.3)
         )
-        return response.content.summary
+        return String(response.content.trimmingCharacters(in: .whitespacesAndNewlines).prefix(120))
+    }
+
+    // MARK: - 1. セリフ
+
+    /// セリフを文字列でストリーミング生成し、整形済みの途中経過を onPartial に渡す。戻り値は整形済みの全文
+    private func streamLine(
+        prompt: String,
+        heroine: Heroine,
+        firstSession: LanguageModelSession,
+        onPartial: (String) -> Void
+    ) async throws -> String {
+        var session = firstSession
+        var attempt = 0
+        while true {
+            var shown = ""
+            do {
+                let stream = session.streamResponse(to: prompt, options: GenerationOptions(temperature: 0.8))
+                for try await snapshot in stream {
+                    let text = GeneratedTextCleaner.line(snapshot.content)
+                    if !text.isEmpty, text != shown {
+                        shown = text
+                        onPartial(text)
+                    }
+                }
+                guard !shown.isEmpty else { throw CancellationError() }
+                return shown
+            } catch let error as LanguageModelError {
+                guard case .guardrailViolation = error, shown.isEmpty, attempt < Self.guardrailRetryLimit else { throw error }
+                attempt += 1
+                session = makeLineSession(for: heroine)
+            }
+        }
+    }
+
+    // MARK: - 2. 選択肢
+
+    /// 生成や整形に失敗したら空配列を返し、呼び出し側の定型の選択肢に任せる
+    private func choices(heroine: Heroine, directive: SceneDirective, heroineLine: String) async -> [ChoiceOption] {
+        let tones = ChoiceTone.plannedSet()
+        let session = LanguageModelSession(model: dialogueModel, instructions: PromptBuilder.choiceInstructions)
+        guard let response = try? await session.respond(
+            to: PromptBuilder.choicePrompt(heroine: heroine, directive: directive, heroineLine: heroineLine, tones: tones),
+            options: GenerationOptions(temperature: 0.8)
+        ) else { return [] }
+
+        let texts = GeneratedTextCleaner.choices(response.content, count: Self.choiceCount)
+        guard texts.count == Self.choiceCount else { return [] }
+
+        var options: [ChoiceOption] = []
+        for (tone, text) in zip(tones, texts) {
+            let delta = await reaction(heroine: heroine, heroineLine: heroineLine, choice: text)
+            options.append(ChoiceOption(text: text, tone: tone, suggestedDelta: delta))
+        }
+        return options
+    }
+
+    // MARK: - 3. 判定
+
+    private func emotion(for line: String) async -> Emotion {
+        let session = LanguageModelSession(model: taggingModel)
+        let response = try? await session.respond(to: PromptBuilder.emotionPrompt(line: line), generating: EmotionTag.self)
+        return response?.content.emotion ?? .normal
+    }
+
+    private func reaction(heroine: Heroine, heroineLine: String, choice: String) async -> Int {
+        let session = LanguageModelSession(model: taggingModel)
+        let response = try? await session.respond(
+            to: PromptBuilder.reactionPrompt(heroine: heroine, heroineLine: heroineLine, choice: choice),
+            generating: ReactionScore.self
+        )
+        return response?.content.delta ?? 0
     }
 
     // MARK: - Session
 
-    private func makeSession(for heroine: Heroine) -> LanguageModelSession {
-        LanguageModelSession(model: model, instructions: PromptBuilder.instructions(for: heroine))
+    private func makeLineSession(for heroine: Heroine) -> LanguageModelSession {
+        LanguageModelSession(model: dialogueModel, instructions: PromptBuilder.instructions(for: heroine))
     }
 
     /// prewarm 済みのセッションがあれば使い、なければ新しく作る。
@@ -77,7 +150,7 @@ final class FoundationModelDialogueGenerator: DialogueGenerating {
         if let warmed = warmedSession, warmed.heroineID == heroine.id {
             return warmed.session
         }
-        return makeSession(for: heroine)
+        return makeLineSession(for: heroine)
     }
 }
 
