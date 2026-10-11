@@ -1,0 +1,136 @@
+[
+  {
+    "id": 1,
+    "title": "出会いの春",
+    "scenes": [
+      {
+        "id": "c1_hiyori",
+        "cast": "hiyori",
+        "location": "オフィス",
+        "background": "office_building_evening",
+        "narration": "新年度、部署の席替え初日の終業間際。隣のデスクになった後輩のひよりが、椅子ごとこちらに身を寄せて話しかけてきた。",
+        "tags": [
+          "オフィス",
+          "新年度",
+          "自己紹介"
+        ],
+        "goal": "先輩と後輩としての第一印象が決まる",
+        "turns": 3
+      },
+      {
+        "id": "c1_mio",
+        "cast": "mio",
+        "location": "ブックカフェ",
+        "background": "bookcafe",
+        "narration": "仕事帰りに立ち寄った会社近くのブックカフェ。窓際の席で、大学時代からの友達の澪が校正刷りに赤ペンを走らせていた。",
+        "tags": [
+          "ブックカフェ",
+          "本",
+          "ミステリー"
+        ],
+        "goal": "気の置けない友達としての空気を確かめる",
+        "turns": 3
+      },
+      {
+        "id": "c1_ruka",
+        "cast": "ruka",
+        "location": "帰り道",
+        "background": "station_square_night",
+        "narration": "残業を終えた帰り道。駅で鉢合わせた隣の部屋の幼なじみ、るかが、当然のように隣に並んで歩き出した。",
+        "tags": [
+          "帰り道",
+          "幼なじみ",
+          "マンション",
+          "婚活"
+        ],
+        "goal": "幼なじみとしての距離感を確かめる",
+        "turns": 3
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "近づく距離",
+    "scenes": [
+      {
+        "id": "c2_hiyori",
+        "cast": "hiyori",
+        "location": "屋上テラス",
+        "background": "rooftop",
+        "narration": "昼休みの会社の屋上テラス。ひよりが手作りのお弁当を二つ抱えてやってきた。",
+        "tags": [
+          "屋上テラス",
+          "お弁当",
+          "料理",
+          "家族"
+        ],
+        "goal": "ひよりの意外な一面を知る",
+        "turns": 4
+      },
+      {
+        "id": "c2_mio",
+        "cast": "mio",
+        "location": "ブックカフェ",
+        "background": "bookcafe",
+        "narration": "雨の日の仕事帰り。いつものブックカフェで、澪が担当した新刊の推理小説を差し出してきた。",
+        "tags": [
+          "ブックカフェ",
+          "雨",
+          "推理小説",
+          "感想"
+        ],
+        "goal": "澪が友達以上の気持ちを少しだけ見せる",
+        "turns": 4
+      },
+      {
+        "id": "c2_ruka",
+        "cast": "ruka",
+        "location": "居酒屋",
+        "background": "izakaya",
+        "narration": "週末の夜。友達の結婚式の二次会を抜け出してきたるかに呼び出され、行きつけの居酒屋で向かい合った。",
+        "tags": [
+          "居酒屋",
+          "結婚式",
+          "婚活",
+          "約束"
+        ],
+        "goal": "るかの焦りと、昔の約束に触れる",
+        "turns": 4
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "ふたりの答え",
+    "scenes": [
+      {
+        "id": "c3_date",
+        "cast": "@heroine",
+        "location": "夏祭り",
+        "background": "festival",
+        "narration": "週末の夏祭りの夜。人混みの中で、二人きりになる時間ができた。",
+        "tags": [
+          "夏祭り",
+          "デート",
+          "浴衣"
+        ],
+        "goal": "特別な相手として意識し合う",
+        "turns": 4
+      },
+      {
+        "id": "c3_confession",
+        "cast": "@heroine",
+        "location": "花火の見える丘",
+        "background": "hill_night",
+        "narration": "花火が上がる直前。少し離れた丘の上で、彼女が静かに口を開いた。",
+        "tags": [
+          "花火",
+          "告白",
+          "約束"
+        ],
+        "goal": "お互いの気持ちを伝え合う",
+        "turns": 5
+      }
+    ]
+  }
+]

@@ -1,0 +1,51 @@
+name: GyaruGame
+options:
+  bundleIdPrefix: com.kasa
+  deploymentTarget:
+    macOS: "27.0"
+    iOS: "27.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: 1
+targets:
+  GyaruGame:
+    type: application
+    supportedDestinations: [macOS, iOS]
+    sources:
+      - GyaruGame
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.kasa.GyaruGame
+        PRODUCT_NAME: GyaruGame
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "定時後ローカルLLM"
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.adventure-games
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ENABLE_APP_SANDBOX: YES
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Automatic
+        "CODE_SIGN_IDENTITY[sdk=macosx*]": "-"
+    scheme:
+      testTargets:
+        - GyaruGameTests
+  GyaruGameTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - GyaruGameTests
+    dependencies:
+      - target: GyaruGame
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/GyaruGame.app/Contents/MacOS/GyaruGame"
+        BUNDLE_LOADER: "$(TEST_HOST)"
