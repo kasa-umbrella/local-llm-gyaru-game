@@ -4,6 +4,8 @@ import SwiftData
 /// セーブデータへのアクセスをまとめる。今はオートセーブ用の1スロットのみ
 final class SaveRepository {
     static let autoSaveSlotID = 0
+    /// ヒロイン3人・好感度1本だった頃のセーブとは互換性がないので、別のストアに保存する
+    private static let storeName = "SaveV2"
 
     /// ModelContext はコンテナが解放されると使えなくなるので、コンテナごと保持する
     private let container: ModelContainer
@@ -14,8 +16,8 @@ final class SaveRepository {
     }
 
     static func makeContainer(inMemory: Bool = false) throws -> ModelContainer {
-        let schema = Schema([SaveSlot.self, DialogueLog.self, MemorySummary.self])
-        return try ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: inMemory))
+        let schema = Schema([SaveSlot.self, DialogueLog.self])
+        return try ModelContainer(for: schema, configurations: ModelConfiguration(storeName, schema: schema, isStoredInMemoryOnly: inMemory))
     }
 
     func loadAutoSave() -> SaveSlot? {
@@ -24,66 +26,31 @@ final class SaveRepository {
         return try? context.fetch(descriptor).first
     }
 
-    func newGame(heroineID: String) -> SaveSlot {
+    func newGame() -> SaveSlot {
         if let existing = loadAutoSave() {
             context.delete(existing)
             try? context.save()
         }
-        let slot = SaveSlot(slotID: Self.autoSaveSlotID, heroineID: heroineID)
+        let slot = SaveSlot(slotID: Self.autoSaveSlotID)
         context.insert(slot)
         save()
         return slot
     }
 
-    func appendLog(to slot: SaveSlot, scene: SceneDirective, speaker: String, text: String, emotion: Emotion = .normal) {
-        let log = DialogueLog(
-            order: slot.logs.count,
-            chapterIndex: scene.chapterNumber - 1,
-            sceneID: scene.scene.id,
-            heroineID: scene.heroineID,
-            speaker: speaker,
-            text: text,
-            emotion: emotion
-        )
-        slot.logs.append(log)
+    func appendLog(to slot: SaveSlot, sceneID: String, speaker: String, text: String, emotion: Emotion = .normal) {
+        slot.logs.append(DialogueLog(order: slot.logs.count, sceneID: sceneID, speaker: speaker, text: text, emotion: emotion))
     }
 
-    func recentLogs(in slot: SaveSlot, heroineID: String, limit: Int) -> [LogEntry] {
-        slot.logs
-            .filter { $0.heroineID == heroineID }
-            .sorted { $0.order < $1.order }
-            .suffix(limit)
-            .map { LogEntry(speaker: $0.speaker, text: $0.text) }
-    }
-
-    func sceneLogs(in slot: SaveSlot, sceneID: String) -> [LogEntry] {
-        slot.logs
-            .filter { $0.sceneID == sceneID }
-            .sorted { $0.order < $1.order }
-            .map { LogEntry(speaker: $0.speaker, text: $0.text) }
+    /// つづきからシーンをやり直すときに、途中まで読んだ分のログを消す
+    func removeLogs(in slot: SaveSlot, sceneID: String) {
+        for log in slot.logs where log.sceneID == sceneID {
+            context.delete(log)
+        }
+        slot.logs.removeAll { $0.sceneID == sceneID }
     }
 
     func allLogs(in slot: SaveSlot) -> [DialogueLog] {
         slot.logs.sorted { $0.order < $1.order }
-    }
-
-    func addSummary(to slot: SaveSlot, scene: SceneDirective, text: String) {
-        slot.summaries.append(MemorySummary(
-            order: slot.summaries.count,
-            heroineID: scene.heroineID,
-            chapterIndex: scene.chapterNumber - 1,
-            sceneID: scene.scene.id,
-            text: text
-        ))
-    }
-
-    /// 要約は古いものから溜まっていくので、直近の数件だけをプロンプトに入れる
-    func summaries(in slot: SaveSlot, heroineID: String, limit: Int) -> [String] {
-        slot.summaries
-            .filter { $0.heroineID == heroineID }
-            .sorted { $0.order < $1.order }
-            .suffix(limit)
-            .map(\.text)
     }
 
     func save() {

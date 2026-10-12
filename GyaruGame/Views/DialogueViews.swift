@@ -73,7 +73,7 @@ struct DialogueWindow: View {
     let onTitle: () -> Void
 
     enum Indicator {
-        case none, waiting, next
+        case none, next
     }
 
     var body: some View {
@@ -113,11 +113,6 @@ struct DialogueWindow: View {
         switch indicator {
         case .none:
             Color.clear.frame(width: 16, height: 16)
-        case .waiting:
-            ProgressView()
-                .controlSize(.small)
-                .tint(NovelTheme.subText)
-                .frame(width: 16, height: 16)
         case .next:
             Image(systemName: "arrowtriangle.down.fill")
                 .font(.system(size: 12))
@@ -175,24 +170,99 @@ struct ChoiceList: View {
     }
 }
 
-/// 開発用の好感度表示（DEBUG ビルドのみ）
-struct DebugAffectionLabel: View {
-    let affection: Int
-    let delta: Int?
+/// 開発用のパラメータ表示（DEBUG ビルドのみ）。気分と3つの軸を、同じ大きさの別々の箱に出す
+struct DebugStatsRow: View {
+    let metrics: NovelTheme.Metrics
+    /// 1段に並べる箱の数（4なら1段、2なら2段）
+    let columns: Int
+    let feelings: Feelings
+    let delta: Feelings?
+    let mood: Mood
+
+    private static let labelText = Color(white: 0.2)
+    private static let valueFill = Color.white
 
     var body: some View {
-        HStack(spacing: 6) {
-            Text("好感度 \(affection)")
-            Text(AffectionEngine.relationLabel(for: affection))
-            if let delta, delta != 0 {
-                Text(delta > 0 ? "+\(delta)" : "\(delta)")
-                    .foregroundStyle(delta > 0 ? NovelTheme.accent : .cyan)
+        Grid(horizontalSpacing: metrics.debugStatSpacing, verticalSpacing: metrics.debugStatSpacing) {
+            ForEach(Array(stats.chunked(by: columns).enumerated()), id: \.offset) { _, row in
+                GridRow {
+                    ForEach(row, id: \.title) { stat in
+                        box(stat)
+                    }
+                }
             }
         }
-        .font(.system(size: NovelTheme.minimumFontSize).monospacedDigit())
-        .foregroundStyle(.white)
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(.black.opacity(0.5), in: .rect(cornerRadius: 4))
+    }
+
+    private struct Stat {
+        let title: String
+        let icon: String
+        let color: Color
+        let value: String
+        let change: Int
+    }
+
+    private var stats: [Stat] {
+        [Stat(title: "気分", icon: "face.smiling", color: Color(hex: "#F6E3A1"), value: mood.label, change: 0)]
+            + Axis.allCases.map { axis in
+                Stat(title: axis.label, icon: Self.icon(for: axis), color: Self.color(for: axis), value: "\(feelings[axis])", change: delta?[axis] ?? 0)
+            }
+    }
+
+    private static func icon(for axis: Axis) -> String {
+        switch axis {
+        case .tokimeki: "heart.fill"
+        case .trust: "shield.fill"
+        case .nori: "sparkles"
+        }
+    }
+
+    private static func color(for axis: Axis) -> Color {
+        switch axis {
+        case .tokimeki: Color(hex: "#F4A7AE")
+        case .trust: Color(hex: "#A9DDF3")
+        case .nori: Color(hex: "#D3EBB0")
+        }
+    }
+
+    private func box(_ stat: Stat) -> some View {
+        HStack(spacing: 0) {
+            HStack(spacing: 4) {
+                Image(systemName: stat.icon)
+                Text(stat.title)
+            }
+            .font(NovelTheme.font(NovelTheme.minimumFontSize, bold: true))
+            .foregroundStyle(Self.labelText)
+            .padding(.leading, 8)
+            .frame(width: metrics.debugStatLabelWidth, height: metrics.debugStatSize.height, alignment: .leading)
+            .background(stat.color)
+
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                // 直前の判定で動いた分。動かなかった軸は何も出さない
+                if stat.change != 0 {
+                    Text(stat.change > 0 ? "+\(stat.change)" : "\(stat.change)")
+                        .font(.system(size: NovelTheme.minimumFontSize, weight: .bold).monospacedDigit())
+                        .foregroundStyle(stat.change > 0 ? Color(hex: "#D9485F") : Color(hex: "#2F7FB8"))
+                }
+                Spacer(minLength: 0)
+                Text(stat.value)
+                    .font(stat.title == "気分"
+                        ? NovelTheme.font(NovelTheme.minimumFontSize, bold: true)
+                        : .system(size: metrics.debugStatValueFontSize, weight: .medium).monospacedDigit())
+                    .foregroundStyle(Self.labelText)
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, 8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Self.valueFill)
+        }
+        .frame(width: metrics.debugStatSize.width, height: metrics.debugStatSize.height)
+        .clipShape(.rect(cornerRadius: 8))
+    }
+}
+
+private extension Array {
+    func chunked(by size: Int) -> [[Element]] {
+        stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
     }
 }

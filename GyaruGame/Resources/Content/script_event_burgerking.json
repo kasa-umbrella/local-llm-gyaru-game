@@ -1,0 +1,192 @@
+{
+  "sceneID": "event_burgerking",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "五月の昼休み。水道橋駅前のバーガーキング。"
+    },
+    {
+      "type": "narration",
+      "text": "最近、気づいたことがある。昼にバーキンを食べた日は、午後に眠くならない。（※個人の感想です）"
+    },
+    {
+      "type": "narration",
+      "text": "ワッパーにかぶりつこうとした瞬間、向かいの席にトレーが置かれた。"
+    },
+    {
+      "type": "line",
+      "text": "センパイもバーキン派なんすね",
+      "emotion": "smile"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりのトレーには、ワッパーとポテトのL。それと、オニオンリング。"
+    },
+    {
+      "type": "line",
+      "text": "うち、ほぼ毎日ここっす。会社から近いし、午後眠くならないんで",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……それ、今まさにブログに書こうとしてたやつ"
+    },
+    {
+      "type": "line",
+      "text": "えー、先越しちゃった。じゃあ共同研究ってことで。バーキン食べると午後眠くならない説",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "（共同研究になった）"
+    },
+    {
+      "type": "line",
+      "text": "てかセンパイ、ブログにコメント機能つけたんすよね。記事、読んだっす",
+      "emotion": "normal"
+    },
+    {
+      "type": "line",
+      "text": "『コメントの履歴と一緒にリクエストヘッダのログをしっかり残してるので、内容にはお気をつけください』",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "一言一句、暗唱された。"
+    },
+    {
+      "type": "line",
+      "text": "……あれ、IPアドレスとかも見えてるんすか？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "見えてる。どこからどんな端末でアクセスされたかもわかる。読者、ほぼiPhoneだった"
+    },
+    {
+      "type": "line",
+      "text": "……へ、へー。そうなんすね。ふーん",
+      "emotion": "surprised"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、オニオンリングを一気に三つ口に入れた。（なんで動揺してるんだ）"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "何かやましいことでも？",
+          "reaction": {
+            "text": "な、ないっす！ うちはただの一読者っす。……ログ、あんまり細かく見ないでくださいね",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "プライバシーには配慮してるよ",
+          "reaction": {
+            "text": "……ならいいっす。センパイ、そういうとこちゃんとしてそうですもんね。信じるっす",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "京急川崎からのアクセスが多い",
+          "reaction": {
+            "text": "…………ポテト、食べます？ 今のは聞かなかったことにするんで、センパイも言わなかったことにしてください",
+            "emotion": "surprised"
+          }
+        },
+        {
+          "text": "オニオンリング、一つちょうだい",
+          "reaction": {
+            "text": "話そらすの下手すぎないっすか？ ……いいっすよ、一個だけ。うちのリング、高いっすよ",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "ひよりはスマホを取り出して、俺のブログを開いた。"
+    },
+    {
+      "type": "line",
+      "text": "あと、記事のリンク。押すと新しいタブで開くじゃないっすか。あれ、スマホだとちょっとうざいっす",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……PCで読むとき、一覧を残しておきたくて"
+    },
+    {
+      "type": "line",
+      "text": "読者ほぼiPhoneって、さっき自分で言ってたっすよね",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "正論だった。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……ちなみに、ほかのサイトは？"
+    },
+    {
+      "type": "line",
+      "text": "note、同一タブ。YouTube、同一タブ。Amazon、同一タブ。ニトリも同一タブ。……ヨドバシだけ別タブっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "調査が、終わっていた。"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "今日中に直す",
+          "reaction": {
+            "text": "さすが、爆速っすね。……直ったら、うちが一番に確認するっす。業務時間外に",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "ヨドバシ派ってことで",
+          "reaction": {
+            "text": "ヨドバシに寄せてどうするんすか。センパイのブログ、家電売ってないっしょ",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "よく調べたな",
+          "reaction": {
+            "text": "は？ べ、別にセンパイのために調べたんじゃないし。……気になったら調べちゃう性分なだけっす",
+            "emotion": "shy"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "午後、宣言どおり爆速で直して、デプロイした。リンクは同一タブで開くようになった。"
+    },
+    {
+      "type": "narration",
+      "text": "夕方、コメントがついた。『同一タブ、快適です。バーキン理論は継続調査をお願いします』"
+    },
+    {
+      "type": "narration",
+      "text": "送信時刻は十八時三分。業務時間外だった。"
+    }
+  ]
+}

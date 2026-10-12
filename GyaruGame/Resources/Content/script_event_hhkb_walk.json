@@ -1,0 +1,212 @@
+{
+  "sceneID": "event_hhkb_walk",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "諸事情で、キーボードを会社から持ち帰ることになった。"
+    },
+    {
+      "type": "narration",
+      "text": "そして、こういう日に限って、小さいバッグで出社している。結果、HHKBを素手で持って歩く変な人になった。"
+    },
+    {
+      "type": "narration",
+      "text": "川崎駅に着く。せっかくなので、HHKBに外の世界を見せてあげることにした。"
+    },
+    {
+      "type": "narration",
+      "text": "スマホを構えて、駅舎を背景にHHKBを撮る。"
+    },
+    {
+      "type": "line",
+      "text": "……センパイ、なにしてんすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "後ろに、ひよりが立っていた。完全に、不審者を見る目だった。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……散歩"
+    },
+    {
+      "type": "line",
+      "text": "キーボードの？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "HHKBの"
+    },
+    {
+      "type": "line",
+      "text": "ウケる、ガチでウケる。HHKBとお散歩って、もうブログのタイトルじゃないっすか",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "そのとおりだった。"
+    },
+    {
+      "type": "line",
+      "text": "どこ行くんすか、HHKBくんは",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "ご飯を食べに、いっかくや"
+    },
+    {
+      "type": "line",
+      "text": "行く。うちも行く。HHKBくんの初いっかくや、見届けるっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "いっかくやの前で、看板とHHKBの写真を撮る。通行人の視線が痛い。ひよりは隣で、肩を震わせて笑っていた。"
+    },
+    {
+      "type": "narration",
+      "text": "さすがに食卓にキーボードは置けないので、HHKBは荷物入れにしまう。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……今日は、王道でいってみる"
+    },
+    {
+      "type": "line",
+      "text": "え？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "固め、濃いめ、多めで"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりが、箸を落としかけた。"
+    },
+    {
+      "type": "line",
+      "text": "センパイが、浅瀬から上がってきた……！",
+      "emotion": "surprised"
+    },
+    {
+      "type": "narration",
+      "text": "着丼。すする。……濃い。重い。脂が、全部を押し流していく。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……やっぱり、硬め普通少なめが好きだ"
+    },
+    {
+      "type": "line",
+      "text": "一口で戻るの、早すぎっしょ！",
+      "emotion": "smile"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "天宮さんの好み、知りたくて",
+          "reaction": {
+            "text": "……そういうこと言うために、わざわざ頼んだんすか？ ……ずるいっす。ちょっと嬉しいじゃないっすか",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "脂で誤魔化してる",
+          "reaction": {
+            "text": "出た、本質論。……でも残さず食べるの、センパイのそういうとこ好きっすよ。……ラーメンに対する姿勢が！",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "にんにく、めちゃくちゃ入れる",
+          "reaction": {
+            "text": "最強になろうとしてる。……うちも入れるっす。明日、隣の席同士でにんにく臭いの、確定っすね",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "結局、にんにくをめちゃくちゃ入れて最強になり、ご飯を三杯食べて退店した。"
+    },
+    {
+      "type": "narration",
+      "text": "銀柳街を歩く。キーボードを持っていると、キャッチも声をかけてこない。"
+    },
+    {
+      "type": "line",
+      "text": "HHKBって、キャッチ避けになるんすね。新発見っす",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "ラ・チッタ・デッラの前で、HHKBに夜景を見せる。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "綺麗だね……HHKB……"
+    },
+    {
+      "type": "line",
+      "text": "キーボードに話しかけてる……。センパイ、疲れてません？",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "最後に、ごんちゃでタピオカミルクティーを二つ買った。"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "HHKBも満足したと思う",
+          "reaction": {
+            "text": "HHKBくん、今日だけでうちより川崎に詳しくなったっすね。……次はうちも、散歩させてください",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "付き合ってくれてありがとう",
+          "reaction": {
+            "text": "……キーボードの散歩に付き合ったの、人生で初めてっす。でも、楽しかったっすよ。ほんとに",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "タピオカは奢りで",
+          "reaction": {
+            "text": "奢られたっす。……これでHHKBくんとうち、同じ日に同じ人に奢られたことになりますね。ライバルっす",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "記事のタイトルは『HHKBとお散歩』にした。いっかくや2にするか、少し迷った。"
+    },
+    {
+      "type": "narration",
+      "text": "翌日、コメントがついた。『HHKBくんの次のお散歩、いつですか。同行希望』"
+    }
+  ]
+}

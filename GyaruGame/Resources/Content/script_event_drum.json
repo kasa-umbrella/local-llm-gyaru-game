@@ -1,0 +1,190 @@
+{
+  "sceneID": "event_drum",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "土曜の昼。ヨドバシカメラの、洗濯機売り場。"
+    },
+    {
+      "type": "narration",
+      "text": "大学一年のときに買った、二万円しない縦型洗濯機。一人暮らし八年目。（八年目？　こわ）"
+    },
+    {
+      "type": "narration",
+      "text": "急に壊れる前に、買い替えたい。"
+    },
+    {
+      "type": "line",
+      "text": "センパイ？ ドラム式の前で、なに真剣な顔してるんすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "振り返ると、ひよりがいた。手には、ヨドバシの黄色い袋。中身はたぶん、充電ケーブル。"
+    },
+    {
+      "type": "line",
+      "text": "うち、ケーブル買いに来ただけっす。……で、洗濯機っすか？ ドラム式？",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "人生を変えるアイテム、ってよく言うだろ"
+    },
+    {
+      "type": "line",
+      "text": "言いますね。ドラム式、食洗機、ロボット掃除機。現代の三種の神器っす",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "店員さんの説明を、二人で聞く。重要なのは、乾燥機能と洗剤の自動投入。値段と性能のバランスなら、東芝のザブーンらしい。"
+    },
+    {
+      "type": "narration",
+      "text": "値札を見る。約二十万円。"
+    },
+    {
+      "type": "line",
+      "text": "……二十万っすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "今までの夜を考えたら、安い"
+    },
+    {
+      "type": "narration",
+      "text": "夜の二十三時に帰ってきて、洗濯機を回す。洗剤をこぼす。生乾きが怖くて、一時間寝られない。二十四時十五分、干し終わって、最悪の気分で寝る。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "それが、朝ボタンを押すだけになる。帰ったら、カラッカラに乾いてる"
+    },
+    {
+      "type": "line",
+      "text": "……センパイ、プレゼンうまくないっすか。うちまで欲しくなってきた",
+      "emotion": "normal"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "一緒に住めば折半できる",
+          "reaction": {
+            "text": "…………は？ ちょ、店の中っすよ！ 店員さん、今の聞いてないっすよね？ ……聞いてないっすよね？",
+            "emotion": "surprised"
+          }
+        },
+        {
+          "text": "天宮さんも買う？",
+          "reaction": {
+            "text": "うちの部屋、置く場所ないんすよ。……だから、センパイの家のが動くとこ、今度レビューで聞かせてください",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "二十万で人生が変わるなら",
+          "reaction": {
+            "text": "……いいこと言ってるのに、目が死んでるっす。月末の引き落とし、大丈夫っすか？",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "レジで、カードを差し出す。"
+    },
+    {
+      "type": "speech",
+      "speaker": "店員",
+      "text": "お支払い回数は、いかがなさいますか"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "一括で"
+    },
+    {
+      "type": "line",
+      "text": "い、一括！？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "narration",
+      "text": "漢のカード一括払い。来月、破産する予定だ。"
+    },
+    {
+      "type": "line",
+      "text": "……かっこいいのか、かっこよくないのか、わかんないっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "帰り道。ひよりは、なぜか俺のマンションの前までついてきた。"
+    },
+    {
+      "type": "line",
+      "text": "届くの、いつっすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "来週の土曜"
+    },
+    {
+      "type": "line",
+      "text": "じゃ、来週の日曜、レビュー聞かせてください。駅前のカフェで。……業務時間外なんで、オフィシャルに",
+      "emotion": "smile"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "日曜、空けとく",
+          "reaction": {
+            "text": "約束っすよ。……乾燥機の音が静かかどうかまで、ちゃんと報告してくださいね",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "記事に書くから読んで",
+          "reaction": {
+            "text": "読むっすけど。……読むだけじゃ足りないから、聞いてるんすけど",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "なんでマンションまで？",
+          "reaction": {
+            "text": "……え、あ。ほんとだ。話してたら、つい。……京急、反対方向っすね。帰るっす！",
+            "emotion": "shy"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "一週間後。ドラム式洗濯機は、本当に人生を変えた。"
+    },
+    {
+      "type": "narration",
+      "text": "記事の最後に、こう書いた。『ドラム式洗濯機、買いましょう。二十万で人生変えられます。安くないけど安い』"
+    },
+    {
+      "type": "narration",
+      "text": "日曜のカフェで、ひよりはその記事を読み上げて笑った。『この文章量の違いだけで分かりますね』のところで、特に。"
+    }
+  ]
+}

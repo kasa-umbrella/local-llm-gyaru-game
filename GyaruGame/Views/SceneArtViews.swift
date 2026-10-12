@@ -37,17 +37,30 @@ struct SceneBackgroundView: View {
 }
 
 /// 立ち絵。アセット `<heroineID>_<emotion>` → `<heroineID>_normal` の順に探し、なければシルエットで代用する
+///
+/// 全身絵の上側だけを表示枠の高さに合わせて拡大し、バストアップで見せる。はみ出した分は切り抜く
 struct HeroineSpriteView: View {
     let heroine: Heroine
     let emotion: Emotion
 
+    /// 全身絵のうち、表示枠の高さに収める上側の割合。小さいほど寄りになる（1 で全身）
+    static let visibleFraction: CGFloat = 0.5
+    /// 立ち絵アセットの縦横比（幅 / 高さ）。生成時の 2:3 に合わせている
+    private static let spriteAspect: CGFloat = 2.0 / 3.0
+
     var body: some View {
         if let image = AssetImage.named("\(heroine.id)_\(emotion.rawValue)") ?? AssetImage.named("\(heroine.id)_normal") {
-            image
-                .resizable()
-                .scaledToFit()
-                .id(emotion)
-                .transition(.opacity)
+            GeometryReader { proxy in
+                let height = proxy.size.height / Self.visibleFraction
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: height * Self.spriteAspect, height: height)
+                    .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
+                    .clipped()
+            }
+            .id(emotion)
+            .transition(.opacity)
         } else {
             placeholder
         }
@@ -80,5 +93,31 @@ extension Color {
             green: Double((value >> 8) & 0xFF) / 255,
             blue: Double(value & 0xFF) / 255
         )
+    }
+}
+
+/// 丸い顔アイコン。`<heroineID>_normal` があれば切り抜いて使い、なければシルエットで代用する
+struct HeroinePortrait: View {
+    let heroine: Heroine
+    let size: CGFloat
+
+    var body: some View {
+        let color = Color(hex: heroine.themeColor)
+        Group {
+            if let image = AssetImage.named("\(heroine.id)_normal") {
+                image
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                Image(systemName: "person.fill")
+                    .font(.system(size: size * 0.55))
+                    .foregroundStyle(.white.opacity(0.85))
+                    .offset(y: size * 0.1)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(color.mix(with: .black, by: 0.25))
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(.circle)
     }
 }

@@ -1,0 +1,195 @@
+{
+  "prologue": [
+    "prologue_office",
+    "prologue_ikkakuya"
+  ],
+  "deck": [
+    "event_furyu",
+    "event_burgerking",
+    "event_design",
+    "event_drum",
+    "event_keycaps",
+    "event_hhkb_walk",
+    "event_kawasaki_thanks",
+    "event_machikon",
+    "event_atami",
+    "event_blog_down",
+    "event_summer",
+    "event_nomikai",
+    "event_kaedama",
+    "event_remote"
+  ],
+  "deckDrawCount": 5,
+  "routes": [
+    {
+      "axis": "tokimeki",
+      "title": "やっぱ川崎、好きだな",
+      "scenes": [
+        "tokimeki_biryani",
+        "tokimeki_crossing"
+      ],
+      "endings": {
+        "good": "その夜、ブログを更新した。タイトルは、ひよりが決めた。\n『固め濃いめ多めな後輩と、硬め普通少なめな俺』\n数分後、コメントがついた。『業務時間外です。次の日曜は、バーキンで。』",
+        "normal": "日曜十七時のサイクルには、ときどき後輩が混ざるようになった。\nそれが何なのかは、まだブログに書けずにいる。"
+      }
+    },
+    {
+      "axis": "trust",
+      "title": "デスクの上とCI/CD",
+      "scenes": [
+        "trust_prompt",
+        "trust_gakushi"
+      ],
+      "endings": {
+        "good": "月曜の朝、隣の席からレビュー依頼が飛んできた。\nタイトルは『要件定義：これからのふたり』。Approveは、即日だった。",
+        "normal": "デスクの上とCI/CDは、今日も整っている。\n隣の席との距離だけは、まだ要件が決まっていない。"
+      }
+    },
+    {
+      "axis": "nori",
+      "title": "固め濃いめ多め",
+      "scenes": [
+        "nori_barnum",
+        "nori_sunday"
+      ],
+      "endings": {
+        "good": "ブログに、共同執筆者が増えた。\n同じ日曜を、二つの目線で書いている。コメント欄は、だいたいラーメンの話だ。",
+        "normal": "ネタ探しには、だいたい後輩がついてくる。\nそれが何なのかは、まだお互い、記事に書けずにいる。"
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "id": "prologue_office",
+      "location": "水道橋のオフィス",
+      "background": "office_building_day",
+      "month": 4
+    },
+    {
+      "id": "prologue_ikkakuya",
+      "location": "いっかくや",
+      "background": "station_square_night",
+      "month": 5
+    },
+    {
+      "id": "event_furyu",
+      "location": "博多風龍",
+      "background": "office_building_night",
+      "month": 6
+    },
+    {
+      "id": "tokimeki_biryani",
+      "location": "ラ・チッタ・デッラ",
+      "background": "station_square_evening",
+      "month": 7
+    },
+    {
+      "id": "tokimeki_crossing",
+      "location": "ラ・チッタ・デッラへ向かう交差点",
+      "background": "crossing_night_open",
+      "month": 9
+    },
+    {
+      "id": "event_burgerking",
+      "location": "水道橋のバーガーキング",
+      "background": "station_square_day",
+      "month": 5
+    },
+    {
+      "id": "event_design",
+      "location": "夜のオフィス",
+      "background": "office_building_night",
+      "month": 5
+    },
+    {
+      "id": "event_drum",
+      "location": "ヨドバシカメラ川崎",
+      "background": "station_square_day",
+      "month": 5
+    },
+    {
+      "id": "event_keycaps",
+      "location": "水道橋のオフィス",
+      "background": "office_building_day",
+      "month": 5
+    },
+    {
+      "id": "event_hhkb_walk",
+      "location": "川崎の銀柳街",
+      "background": "station_square_night",
+      "month": 5
+    },
+    {
+      "id": "event_kawasaki_thanks",
+      "location": "月曜のオフィス",
+      "background": "office_building_day",
+      "month": 6
+    },
+    {
+      "id": "event_machikon",
+      "location": "横浜駅西口",
+      "background": "station_concourse",
+      "month": 6
+    },
+    {
+      "id": "event_atami",
+      "location": "熱海駅のホーム",
+      "background": "station_platform_night_lights_on",
+      "month": 6
+    },
+    {
+      "id": "event_blog_down",
+      "location": "金曜の夜のオフィス",
+      "background": "office_building_night",
+      "month": 7
+    },
+    {
+      "id": "event_summer",
+      "location": "江ノ島へ続く道",
+      "background": "riverside_evening",
+      "month": 8
+    },
+    {
+      "id": "event_nomikai",
+      "location": "新橋の居酒屋",
+      "background": "station_square_night",
+      "month": 9
+    },
+    {
+      "id": "event_kaedama",
+      "location": "水道橋のバーガーキング",
+      "background": "station_square_day",
+      "month": 9
+    },
+    {
+      "id": "event_remote",
+      "location": "ヨドバシ帰りのスタバ",
+      "background": "station_square_evening",
+      "month": 9
+    },
+    {
+      "id": "trust_prompt",
+      "location": "休日出勤のオフィス",
+      "background": "office_building_night",
+      "month": 9
+    },
+    {
+      "id": "trust_gakushi",
+      "location": "横浜駅西口",
+      "background": "station_concourse",
+      "month": 10
+    },
+    {
+      "id": "nori_barnum",
+      "location": "水道橋のバーガーキング",
+      "background": "station_square_day",
+      "month": 9
+    },
+    {
+      "id": "nori_sunday",
+      "location": "夜のラ・チッタ・デッラ",
+      "background": "station_square_night",
+      "month": 10
+    }
+  ]
+}

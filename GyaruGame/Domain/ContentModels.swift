@@ -1,116 +1,88 @@
 import Foundation
-import FoundationModels
 
 /// 主人公の名前（将来的には設定画面で変更できるようにする）
 nonisolated enum GameConstants {
     static let playerName = "ユウキ"
-    static let playerProfile = "30歳の会社員"
-    static let affectionRange = 0...100
+    static let playerProfile = "26歳のWebエンジニア"
 }
 
 /// 表情。立ち絵の差分切り替えに使う（アセット名: `<heroineID>_<emotion>`）
-@Generable
 nonisolated enum Emotion: String, Codable, CaseIterable, Sendable {
     case normal, smile, shy, angry, sad, surprised
-}
-
-/// 選択肢の「方向性」。ヒロインごとの相性表で好感度を補正する
-@Generable
-nonisolated enum ChoiceTone: String, Codable, CaseIterable, Sendable {
-    case kind, teasing, honest, cool, romantic, rude
-}
-
-extension ChoiceTone {
-    /// 選択肢を生成するときにモデルへ渡す方向性
-    nonisolated var instruction: String {
-        switch self {
-        case .kind: "優しく受け止める"
-        case .teasing: "軽くからかう"
-        case .honest: "素直な気持ちを言う"
-        case .cool: "そっけなく返す"
-        case .romantic: "少しドキッとさせる"
-        case .rude: "失礼な態度をとる"
-        }
-    }
-
-    /// 1ターンの選択肢3つの方向性。毎回「好意的・攻め・引き」が1つずつ並ぶようにし、順番は混ぜる
-    nonisolated static func plannedSet() -> [ChoiceTone] {
-        [
-            [ChoiceTone.kind, .honest].randomElement()!,
-            [ChoiceTone.teasing, .romantic].randomElement()!,
-            [ChoiceTone.cool, .cool, .rude].randomElement()!,
-        ].shuffled()
-    }
 }
 
 nonisolated struct Heroine: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let name: String
-    /// 主人公との関係（選択画面に表示）
-    let role: String
-    /// 選択画面のひとこと紹介
-    let tagline: String
     let firstPerson: String
     let callsPlayer: String
+    /// 判定役の LLM に渡す人物像
     let profile: String
-    let speechRules: [String]
-    let sampleLines: [String]
-    /// ChoiceTone.rawValue -> 補正値
-    let tonePreferences: [String: Int]
-    /// 生成失敗時に使う定型セリフ
-    let fallbackLines: [String]
     let themeColor: String
-
-    func preference(for tone: ChoiceTone) -> Int {
-        tonePreferences[tone.rawValue] ?? 0
-    }
 }
 
-nonisolated struct Chapter: Codable, Identifiable, Sendable {
-    let id: Int
-    let title: String
-    let scenes: [SceneDefinition]
-}
-
+/// 1つのシーン。中身（セリフと選択肢）は `script_<id>.json` に人が書く
 nonisolated struct SceneDefinition: Codable, Identifiable, Sendable {
-    /// 選んだヒロインが誰であっても使う共通シーンの特殊キャスト
-    static let selectedHeroineCast = "@heroine"
-
     let id: String
-    let cast: String
     let location: String
     let background: String
-    let narration: String
-    let tags: [String]
-    let goal: String
-    /// 選択肢を出すターン数。この数だけ選んだら締めのターンに入る
-    let turns: Int
+    /// 原作の記事が書かれた月。山札から引いたイベントはこの順に並べる
+    let month: Int
 }
 
-nonisolated struct LoreEntry: Codable, Identifiable, Hashable, Sendable {
-    let id: String
-    let heroineID: String
-    let tags: [String]
-    let keywords: [String]
-    let text: String
+/// 最終盤のルート。分岐のくじで1つに決まる
+nonisolated struct Route: Codable, Sendable {
+    let axis: Axis
+    let title: String
+    /// ルートに入ってから順に流すシーン
+    let scenes: [String]
+    /// "good" / "normal" のエンディングの文
+    let endings: [String: String]
+}
+
+/// 物語の骨組み。共通の導入 → 山札から引いたイベント → 分岐したルート の順に進む
+nonisolated struct Story: Codable, Sendable {
+    let prologue: [String]
+    /// 中盤のイベントの山札（1周で deckDrawCount 枚だけ引く）
+    let deck: [String]
+    let deckDrawCount: Int
+    let routes: [Route]
+    let scenes: [SceneDefinition]
+
+    func scene(id: String) -> SceneDefinition? {
+        scenes.first { $0.id == id }
+    }
+
+    func route(for axis: Axis) -> Route? {
+        routes.first { $0.axis == axis }
+    }
 }
 
 /// バンドル内JSONから読み込むマスターデータ一式
 nonisolated struct GameContent: Sendable {
-    let heroines: [Heroine]
-    let chapters: [Chapter]
-    let lore: [LoreEntry]
+    let heroine: Heroine
+    let story: Story
+    /// シーンID → 人が書いたシナリオ
+    let scripts: [String: SceneScript]
 
-    func heroine(id: String) -> Heroine? {
-        heroines.first { $0.id == id }
+    func script(for sceneID: String) -> SceneScript? {
+        scripts[sceneID]
     }
 
     static func loadFromBundle(_ bundle: Bundle = .main) throws -> GameContent {
         GameContent(
-            heroines: try decode("heroines", from: bundle),
-            chapters: try decode("chapters", from: bundle),
-            lore: try decode("lore", from: bundle)
+            heroine: try decode("heroine", from: bundle),
+            story: try decode("story", from: bundle),
+            scripts: try loadScripts(from: bundle)
         )
+    }
+
+    /// `script_<シーンID>.json` をすべて読み込む
+    private static func loadScripts(from bundle: Bundle) throws -> [String: SceneScript] {
+        let urls = (bundle.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
+            .filter { $0.lastPathComponent.hasPrefix("script_") }
+        let scripts = try urls.map { try JSONDecoder().decode(SceneScript.self, from: Data(contentsOf: $0)) }
+        return Dictionary(uniqueKeysWithValues: scripts.map { ($0.sceneID, $0) })
     }
 
     private static func decode<T: Decodable>(_ name: String, from bundle: Bundle) throws -> T {

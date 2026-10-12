@@ -1,0 +1,195 @@
+{
+  "sceneID": "event_keycaps",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "HHKBの無刻印を使い始めて、一か月と少し。キーボード自体は、相変わらず最高だ。"
+    },
+    {
+      "type": "narration",
+      "text": "でも、無刻印が不便すぎる。&がどこか、#がどこか、意外と覚えていない。てか、バッククォートはどこにあるんだ。"
+    },
+    {
+      "type": "narration",
+      "text": "そして今朝も、ワンタイムパスワードを二回間違えた。"
+    },
+    {
+      "type": "line",
+      "text": "センパイ。……また読み上げるっすか？",
+      "emotion": "normal"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "隣の席から、ひよりが覗き込んできた。手元には、刻印ありのHHKB。キートップの中央に、くっきりと印字がある。"
+    },
+    {
+      "type": "narration",
+      "text": "━━━━━━━刻印あるの、便利そうだな。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……天宮さんのそれ、ちょっと触らせて"
+    },
+    {
+      "type": "line",
+      "text": "お、ついに来ました？ 刻印沼",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "打ってみる。数字の段で、迷わない。7、8、9、0。下を見れば、書いてある。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "…………便利だ"
+    },
+    {
+      "type": "line",
+      "text": "でしょ！ だから最初に言ったじゃないっすか。無刻印はやめといたほうがいいって",
+      "emotion": "smile"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "天宮さんが正しかった",
+          "reaction": {
+            "text": "素直っすね。……そういうとこ、ずるいっす。勝ったのに、なんか勝った気しないじゃないっすか",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "まだ負けてない",
+          "reaction": {
+            "text": "三回連続でアカウントロック寸前だった人が言っても、説得力ゼロっす",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "刻印のほうが天宮さんっぽい",
+          "reaction": {
+            "text": "うちっぽいって、どういう意味っすか。……わかりやすいってことっすか。……まあ、否定はしないっす",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "昼休み。PFUの公式ショップを開く。刻印ありのキーキャップセット。"
+    },
+    {
+      "type": "narration",
+      "text": "値段を見た。有線のメカニカルキーボードが、一台買えるくらいだった。"
+    },
+    {
+      "type": "line",
+      "text": "うわ、高っ。……え、ポチるんすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "ポチった"
+    },
+    {
+      "type": "line",
+      "text": "ウケる。無刻印に三万三千円払って、刻印に追加で払うの、ガチの沼っすね",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "三日後。届いたキーキャップを机に並べると、ひよりが椅子ごと寄ってきた。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "全部は付け替えない。元無刻印ユーザーとしてのプライドがある"
+    },
+    {
+      "type": "line",
+      "text": "プライドの使い方、それで合ってます？",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "数字キー。記号。それとZXCV。……何回コピーしようとして、切り取ったか"
+    },
+    {
+      "type": "line",
+      "text": "あー、切り取りの事故。あるあるっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "あと、cmdを割り当ててるとこに、HHKBのロゴのキー"
+    },
+    {
+      "type": "line",
+      "text": "それ、意味あります？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "なんか、オシャレじゃない？"
+    },
+    {
+      "type": "line",
+      "text": "……ちょっとオシャレっす。悔しいけど",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "キーを引き抜いて、はめる。ひよりが、次のキーを渡してくれる。気づけば、ほとんど共同作業になっていた。"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "QWERTYも付け替える",
+          "reaction": {
+            "text": "QWERTYも！？ ……QWERTY配列だってすぐわかるっすね。いいと思うっす。意味はないけど",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "一個だけ、天宮さんが選んで",
+          "reaction": {
+            "text": "え、うちが？ ……じゃあ、エンターキー。毎日一番押すとこなんで。押すたびに、うちのこと思い出してください",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "手伝ってくれて助かった",
+          "reaction": {
+            "text": "どういたしまして。デスクの上とキーボードは、整ってるほどいいっす",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "その夜、帰りの電車で記事を書いた。ネトフリの続きを見るか、迷った末に。タイトルは『無刻印、やめました』。副題は『ガチで悔しい』。"
+    },
+    {
+      "type": "narration",
+      "text": "『そんなある日、同僚のHHKBを見る機会がありました。刻印ありのモデルでした』"
+    },
+    {
+      "type": "narration",
+      "text": "その同僚が誰かは、書かなかった。翌朝、コメントがついた。『副題、最高っす』"
+    }
+  ]
+}

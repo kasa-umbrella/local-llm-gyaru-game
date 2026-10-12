@@ -16,11 +16,7 @@ struct GyaruGameApp: App {
             fatalError("ゲームデータの初期化に失敗しました: \(error)")
         }
         self.container = container
-        _game = State(initialValue: GameViewModel(
-            content: content,
-            repository: SaveRepository(container: container),
-            backend: CommandLine.arguments.contains("-useMockLLM") ? .mock : nil
-        ))
+        _game = State(initialValue: GameViewModel(content: content, repository: SaveRepository(container: container)))
     }
 
     var body: some Scene {
@@ -29,15 +25,12 @@ struct GyaruGameApp: App {
                 .environment(game)
                 #if DEBUG
                 .task {
-                    // 開発用: `-startNewGame` でタイトルを飛ばして選択画面へ、
-                    // `-startNewGame <heroineID>` ならそのヒロインですぐに始める
-                    let args = CommandLine.arguments
-                    if let index = args.firstIndex(of: "-startNewGame"), game.screen == .title {
-                        if let heroineID = args[safe: index + 1], game.content.heroine(id: heroineID) != nil {
-                            game.newGame(heroineID: heroineID)
-                        } else {
-                            game.showHeroineSelect()
+                    // 開発用: `-startNewGame` でタイトルを飛ばして新しく始める（モデルの準備ができてから）
+                    if CommandLine.arguments.contains("-startNewGame"), game.screen == .title {
+                        while !game.isModelReady, !Task.isCancelled {
+                            try? await Task.sleep(for: .milliseconds(200))
                         }
+                        if game.isModelReady { game.newGame() }
                     }
                 }
                 #endif

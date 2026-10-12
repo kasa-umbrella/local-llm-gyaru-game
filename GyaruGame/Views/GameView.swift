@@ -19,24 +19,33 @@ struct GameView: View {
     /// 表示中の行を一意に表すキー。変わったら文字送りを最初からやり直す
     private var lineKey: Int {
         var hasher = Hasher()
-        hasher.combine(game.directive?.scene.id)
+        hasher.combine(game.scene?.id)
         hasher.combine(game.cursor)
         return hasher.finalize()
     }
 
     var body: some View {
         ZStack {
-            SceneBackgroundView(name: game.directive?.scene.background ?? "")
+            SceneBackgroundView(name: game.scene?.background ?? "")
                 .ignoresSafeArea()
-                .animation(.easeInOut(duration: 0.6), value: game.directive?.scene.id)
+                .animation(.easeInOut(duration: 0.6), value: game.scene?.id)
 
-            if let heroine = game.heroine {
-                HeroineSpriteView(heroine: heroine, emotion: game.currentEmotion)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.top, metrics.isShort ? 24 : 60)
-                    .padding(.bottom, metrics.windowHeight * 0.55)
-                    .animation(.easeInOut(duration: 0.25), value: game.currentEmotion)
+            // 立ち絵は画面下端まで伸ばし、下半身は半透明のテキストウィンドウ越しに見せる。
+            // 登場は左からスライドイン、退場はフェードアウト
+            ZStack {
+                if game.isHeroineOnStage {
+                    HeroineSpriteView(heroine: game.heroine, emotion: game.currentEmotion)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.top, metrics.isShort ? 24 : 60)
+                        .ignoresSafeArea(edges: .bottom)
+                        .animation(.easeInOut(duration: 0.25), value: game.currentEmotion)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .leading).combined(with: .opacity),
+                            removal: .opacity
+                        ))
+                }
             }
+            .animation(.easeOut(duration: 0.45), value: game.isHeroineOnStage)
 
             VStack(spacing: 0) {
                 header
@@ -48,15 +57,6 @@ struct GameView: View {
                     .transition(.opacity)
                 }
                 Spacer(minLength: metrics.isShort ? 4 : 12)
-                if let notice = game.notice {
-                    Text(notice)
-                        .font(NovelTheme.font(13))
-                        .foregroundStyle(NovelTheme.text)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(.black.opacity(0.55), in: .rect(cornerRadius: 6))
-                        .padding(.bottom, 8)
-                }
                 dialogueWindow
                     .padding(.top, metrics.namePlateSize.height * 0.5)
             }
@@ -97,22 +97,43 @@ struct GameView: View {
 
     // MARK: - パーツ
 
+    /// 横幅が足りなければ、開発用のパラメータ表示を章プレートの下の段に回す（それでも入らなければ2列×2段）
     private var header: some View {
-        HStack(alignment: .top) {
-            if let directive = game.directive {
-                Text("第\(directive.chapterNumber)章　\(directive.scene.location)")
-                    .font(NovelTheme.font(metrics.chapterFontSize))
-                    .foregroundStyle(NovelTheme.text)
-                    .lineLimit(1)
-                    .minimumScaleFactor(NovelTheme.minimumScale(for: metrics.chapterFontSize))
-                    .padding(.horizontal, 14)
-                    .frame(width: metrics.chapterPlateSize.width, height: metrics.chapterPlateSize.height, alignment: .leading)
-                    .novelPanel(cornerRadius: 6)
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .top) {
+                chapterPlate
+                Spacer()
+                debugStats(columns: 4)
             }
-            Spacer()
-            #if DEBUG
-            DebugAffectionLabel(affection: game.currentAffection, delta: game.lastAffectionDelta)
-            #endif
+            VStack(alignment: .leading, spacing: metrics.debugStatSpacing) {
+                chapterPlate
+                debugStats(columns: 4)
+            }
+            VStack(alignment: .leading, spacing: metrics.debugStatSpacing) {
+                chapterPlate
+                debugStats(columns: 2)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func debugStats(columns: Int) -> some View {
+        #if DEBUG
+        DebugStatsRow(metrics: metrics, columns: columns, feelings: game.progress.feelings, delta: game.lastJudgment, mood: game.mood)
+        #endif
+    }
+
+    @ViewBuilder
+    private var chapterPlate: some View {
+        if let scene = game.scene {
+            Text("\(scene.month)月　\(scene.location)")
+                .font(NovelTheme.font(metrics.chapterFontSize))
+                .foregroundStyle(NovelTheme.text)
+                .lineLimit(1)
+                .minimumScaleFactor(NovelTheme.minimumScale(for: metrics.chapterFontSize))
+                .padding(.horizontal, 14)
+                .frame(width: metrics.chapterPlateSize.width, height: metrics.chapterPlateSize.height, alignment: .leading)
+                .novelPanel(cornerRadius: 6)
         }
     }
 
@@ -122,9 +143,7 @@ struct GameView: View {
         return DialogueWindow(
             metrics: metrics,
             speaker: speaker,
-            speakerColor: speaker == GameConstants.playerName
-                ? Self.playerNameColor
-                : game.heroine.map { Color(hex: $0.themeColor) } ?? .gray,
+            speakerColor: speaker == game.heroine.name ? Color(hex: game.heroine.themeColor) : Self.playerNameColor,
             text: typewriter.attributedText(color: NovelTheme.text),
             isNarration: line != nil && speaker == nil,
             indicator: indicator,
@@ -149,9 +168,7 @@ struct GameView: View {
     }
 
     private var indicator: DialogueWindow.Indicator {
-        if typewriter.isTyping { return .none }
-        if game.canAdvance { return .next }
-        return game.isGenerating ? .waiting : .none
+        !typewriter.isTyping && game.canAdvance ? .next : .none
     }
 
     private var loadingOverlay: some View {

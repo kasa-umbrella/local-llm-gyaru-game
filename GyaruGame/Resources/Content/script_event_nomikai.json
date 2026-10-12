@@ -1,0 +1,186 @@
+{
+  "sceneID": "event_nomikai",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "九月。リリースの打ち上げは、新橋の居酒屋だった。総勢十五人。"
+    },
+    {
+      "type": "narration",
+      "text": "始まって三十分で、飲みゲーが始まった。山手線ゲーム。言えなかった人が、一気飲み。"
+    },
+    {
+      "type": "narration",
+      "text": "隅の席で、ウーロンハイをちびちび飲む。"
+    },
+    {
+      "type": "line",
+      "text": "センパイ、また抜け出す顔してる",
+      "emotion": "normal"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "いつの間にか、ひよりが隣に座っていた。手には、ジンジャーエール。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "してない"
+    },
+    {
+      "type": "line",
+      "text": "してるっす。ラーメン食べに抜け出す顔っす",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……今日は、抜けない。最後までいる"
+    },
+    {
+      "type": "line",
+      "text": "えらっ。どうしたんすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "考えてたんだ。飲みゲーばっかりの飲み会って、中身のある飲み会って言えるのかなって"
+    },
+    {
+      "type": "line",
+      "text": "……中身？",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "本当に面白い話があれば、誰かに一気飲みさせなくても盛り上がるはずだろ"
+    },
+    {
+      "type": "line",
+      "text": "……それ、わかるっす。でも、それ言ったら終わりっすよ。あっちのテーブルに聞こえたら",
+      "emotion": "normal"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "ここで中身のある話をしよう",
+          "reaction": {
+            "text": "……いいっすね。二人だけの、中身ある飲み会。……何話します？ センパイから、どうぞ",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "天宮さんは、飲みゲー得意？",
+          "reaction": {
+            "text": "得意っすよ。山手線ゲーム、負けたことないっす。……でも、今日はこっちの席のほうがいいっす",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "混ざれないのも、中身がないな",
+          "reaction": {
+            "text": "……自分に厳しいっすね。混ざれる人も、混ざれない人も、どっちもいていいと思うっすけど",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、ジンジャーエールのグラスを指でなぞった。"
+    },
+    {
+      "type": "line",
+      "text": "……うち、新卒の面接で、志望理由に『成長したいから』って言ったんすよ",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……"
+    },
+    {
+      "type": "line",
+      "text": "あとで、人事の人に言われたっす。『成長できるかどうかは、環境じゃなくて自分次第だよ』って。……あれ、中身ないって言われてたんすね、たぶん",
+      "emotion": "sad"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "でも、天宮さんは成長してる。誰よりも"
+    },
+    {
+      "type": "line",
+      "text": "え",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "CIを直すのも、障害対応も、オンボーディングも。環境のせいにしないで、自分でやってる。……中身、あるよ"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、しばらく黙っていた。向こうのテーブルで誰かが一気飲みをして、歓声が上がった。"
+    },
+    {
+      "type": "line",
+      "text": "……センパイ、たまにそういうこと、急に言いますよね。ずるいっす",
+      "emotion": "shy"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "本当のことだから",
+          "reaction": {
+            "text": "……知ってるっす。センパイ、嘘つくの下手なんで。……だから、ずるいんすよ",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "ブログには書かないけど",
+          "reaction": {
+            "text": "書いてもいいっすよ。……ただし、うちのことだってわからないように。……わかるように書いてもいいけど",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "中身のある飲み会になったな",
+          "reaction": {
+            "text": "なったっすね。……これがコンテクストってやつっすか。積み重ねた分だけ、話せることが増えるっていう",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "一回だけ、飲みゲー参加する？",
+          "reaction": {
+            "text": "……いいっすよ。センパイが負けたら、うちが代わりに飲むんで。ジンジャーエールで",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "打ち上げには、最後までいた。飲みゲーには一回だけ参加して、一回で負けた。"
+    },
+    {
+      "type": "narration",
+      "text": "帰りの電車で考えた。中身のある関係は、コンテクストを構築する。手順を踏んで、少しずつ積み重ねていく。"
+    },
+    {
+      "type": "narration",
+      "text": "半年前、隣の席の後輩は、ただの後輩だった。"
+    }
+  ]
+}

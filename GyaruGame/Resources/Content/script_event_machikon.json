@@ -1,0 +1,213 @@
+{
+  "sceneID": "event_machikon",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "土曜の夕方、横浜駅西口。"
+    },
+    {
+      "type": "narration",
+      "text": "一戦目の婚活パーティーが終わった。マッチしなかったので、会場を追い出された。"
+    },
+    {
+      "type": "narration",
+      "text": "そのあと、婚活サービスのカウンセリングで、真っ当な悪口を言われた。『二十六年間交際経験がないのに、どういう道筋で結婚にたどり着くおつもりですか』"
+    },
+    {
+      "type": "narration",
+      "text": "初期費用と成婚料で四十万。月会費一万五千円。涙が出た。"
+    },
+    {
+      "type": "narration",
+      "text": "二戦目は、同期の佐藤と行く約束をしている。待つ間に、一戦目のレポを書き上げてしまおう。"
+    },
+    {
+      "type": "line",
+      "text": "……センパイ？ 横浜で何してるんすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "顔を上げると、紙袋を提げたひよりが立っていた。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……ブログを書いてる"
+    },
+    {
+      "type": "line",
+      "text": "駅の柱にもたれて？ ……何の記事っすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "隠そうとしたときには、遅かった。画面の一番上に、太字で書いてある。『街コンダブルヘッダー』"
+    },
+    {
+      "type": "line",
+      "text": "街コン……ダブルヘッダー……？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "一日に二つの街コンに参加すること"
+    },
+    {
+      "type": "line",
+      "text": "なんで、そんなこと",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "気分です━━━━━━━━━"
+    },
+    {
+      "type": "line",
+      "text": "それ好きすぎじゃないっすか！？ ブログでも三回は見たっすよ、その線",
+      "emotion": "angry"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、画面を覗き込んだまま固まった。四十万円のくだりを、読んでいる。"
+    },
+    {
+      "type": "line",
+      "text": "……『大泣き』って書いてあるんすけど",
+      "emotion": "sad"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "正論は、ときに暴力だった"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "笑ってくれていいよ",
+          "reaction": {
+            "text": "笑えないっすよ。……センパイが泣いてるとこ想像したら、ちょっと、むかついてきたっす。そのカウンセラーに",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "結婚って、どうやるんだろうな",
+          "reaction": {
+            "text": "……知らないっすよ。うちだって、知らないっす。……でも、四十万払わなくても、たどり着く道はあると思うっす",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "天宮さんは、こういうの行く？",
+          "reaction": {
+            "text": "行かないっす。……行く必要、ないんで。今のところは。今のところは、っす",
+            "emotion": "shy"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "改札のほうから、佐藤が手を振って歩いてきた。"
+    },
+    {
+      "type": "speech",
+      "speaker": "佐藤",
+      "text": "お待たせ。……あれ、天宮さん？ なんでいるの？"
+    },
+    {
+      "type": "line",
+      "text": "偶然っす。買い物の帰りっす。……佐藤さんも、街コンっすか",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "佐藤",
+      "text": "そう、こいつに誘われて"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりの視線が、ゆっくりこっちに戻ってくる。"
+    },
+    {
+      "type": "line",
+      "text": "……いってらっしゃいっす。二戦目、がんばってください。うちには関係ないっすけど",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "関係ない、のところだけ、やけに力が入っていた。"
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "二戦目の会場は、西口のビルの十三階。プロフィールカードを書いて、女性と順番に話す。"
+    },
+    {
+      "type": "narration",
+      "text": "その中に、同じ高校の卒業生がいた。横浜で、栃木の同じ高校。運命だと思った（激キショ）。第一希望に書いた。マッチしなかった。"
+    },
+    {
+      "type": "narration",
+      "text": "帰りの電車で、スマホが震えた。ひよりから。"
+    },
+    {
+      "type": "line",
+      "text": "『結果は？』",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "『マッチしなかった』"
+    },
+    {
+      "type": "line",
+      "text": "『ですよね』",
+      "emotion": "smile"
+    },
+    {
+      "type": "line",
+      "text": "『……ちょっとだけ安心したのは、内緒っす』",
+      "emotion": "shy"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "『安心？』",
+          "reaction": {
+            "text": "『今の、送信取り消し忘れたっす。忘れてください。……業務時間外なんで、ノーカンっす』",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "『三戦目も行くかも』",
+          "reaction": {
+            "text": "『行かなくていいっす。……コメント欄の人が三戦目待ってるって言ってても。行かなくていいっす』",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "『心配してくれてありがとう』",
+          "reaction": {
+            "text": "『心配はしてないっす。……月曜、バーキンで詳しく聞くんで。四十万のとこから』",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "翌週、記事を公開した。同じ高校の人のことは、書いた。帰りの電車のLINEのことは、書かなかった。"
+    }
+  ]
+}

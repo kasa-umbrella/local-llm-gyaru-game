@@ -1,39 +1,98 @@
 import Foundation
 
-/// 好感度の変化量 = 返答の方向性ごとの基準値 + ヒロインの相性表 + LLM の判定（微調整）。
-/// オンデバイスモデルの判定はほぼ同じ値しか返さないため、主役は基準値と相性表にして、
-/// LLM の判定は ±1 の範囲でだけ効かせる。
-nonisolated struct AffectionEngine: Sendable {
-    static let llmAdjustmentRange = -1...1
-    static let perTurnRange = -5...5
+/// ひよりの気持ちの3つの軸。それぞれが最終盤のルートに対応する
+nonisolated enum Axis: String, Codable, CaseIterable, Sendable {
+    case tokimeki, trust, nori
 
-    static func baseDelta(for tone: ChoiceTone) -> Int {
-        switch tone {
-        case .kind, .honest: 2
-        case .teasing, .romantic: 1
-        case .cool: -1
-        case .rude: -3
+    var label: String {
+        switch self {
+        case .tokimeki: "ときめき"
+        case .trust: "信頼"
+        case .nori: "ノリ"
         }
     }
 
-    func delta(for choice: ChoiceOption, heroine: Heroine) -> Int {
-        let adjustment = choice.suggestedDelta.clamped(to: Self.llmAdjustmentRange)
-        return (Self.baseDelta(for: choice.tone) + heroine.preference(for: choice.tone) + adjustment)
-            .clamped(to: Self.perTurnRange)
-    }
-
-    func apply(_ delta: Int, to current: Int) -> Int {
-        (current + delta).clamped(to: GameConstants.affectionRange)
-    }
-
-    static func relationLabel(for affection: Int) -> String {
-        switch affection {
-        case 80...: "特別な人"
-        case 60..<80: "好きな人"
-        case 40..<60: "気になる人"
-        case 20..<40: "友達"
-        default: "知り合い"
+    /// 判定役の LLM に渡す、この軸が上がるときの気持ち
+    var meaning: String {
+        switch self {
+        case .tokimeki: "主人公を異性として意識した、ドキッとした"
+        case .trust: "主人公を頼れる、本音を話せる相手だと感じた"
+        case .nori: "主人公といると楽しい、ノリが合うと感じた"
         }
+    }
+}
+
+/// 3つの軸の値。プレイヤーには見せない
+nonisolated struct Feelings: Codable, Equatable, Sendable {
+    /// 1回の選択で動く幅（判定役の LLM の出力をこの範囲に収める）
+    static let deltaRange = -2...3
+    static let valueRange = 0...100
+
+    var tokimeki = 0
+    var trust = 0
+    var nori = 0
+
+    subscript(axis: Axis) -> Int {
+        get {
+            switch axis {
+            case .tokimeki: tokimeki
+            case .trust: trust
+            case .nori: nori
+            }
+        }
+        set {
+            switch axis {
+            case .tokimeki: tokimeki = newValue
+            case .trust: trust = newValue
+            case .nori: nori = newValue
+            }
+        }
+    }
+
+    /// 判定の変化量を足す。各軸は valueRange に収める
+    func adding(_ delta: Feelings) -> Feelings {
+        var result = self
+        for axis in Axis.allCases {
+            result[axis] = (self[axis] + delta[axis]).clamped(to: Self.valueRange)
+        }
+        return result
+    }
+
+    /// いちばん高い軸（同点なら Axis.allCases の順で先のもの）
+    var strongest: Axis {
+        Axis.allCases.max { self[$0] < self[$1] } ?? .tokimeki
+    }
+}
+
+/// シーンごとにランダムで決まる、ひよりのその日の気分。判定にだけ効かせる
+nonisolated enum Mood: String, CaseIterable, Sendable {
+    case cheerful, tired, sulky, giddy, calm
+
+    var label: String {
+        switch self {
+        case .cheerful: "上機嫌"
+        case .tired: "疲れ気味"
+        case .sulky: "拗ね気味"
+        case .giddy: "浮かれ気味"
+        case .calm: "普段どおり"
+        }
+    }
+}
+
+/// 種を指定できる乱数（SplitMix64）。テストでは種を固定して、山札と分岐のくじを再現する
+nonisolated struct SeededGenerator: RandomNumberGenerator, Sendable {
+    private var state: UInt64
+
+    init(seed: UInt64 = .random(in: 0...UInt64.max)) {
+        state = seed
+    }
+
+    mutating func next() -> UInt64 {
+        state &+= 0x9E37_79B9_7F4A_7C15
+        var z = state
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        return z ^ (z >> 31)
     }
 }
 

@@ -1,0 +1,218 @@
+{
+  "sceneID": "event_atami",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "六月の水曜日、十六時二分。ふと、おぼろげに浮かんできた。——いっかくや。"
+    },
+    {
+      "type": "narration",
+      "text": "昨日は帰りが遅かったのに、なぜかそのまま深夜まで起きていた。寝不足で、体がキチゲの発散を欲している。"
+    },
+    {
+      "type": "narration",
+      "text": "今日はダメな日だ。定時まで働いて、退勤。待望のいっかくやへ。"
+    },
+    {
+      "type": "narration",
+      "text": "今日は、東京駅から東海道線で帰る気分だった。激しい早歩きでホームに駆け上がる。小田原行きが、目の前で発車した。"
+    },
+    {
+      "type": "line",
+      "text": "あー！ 行っちゃった……",
+      "emotion": "surprised"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "隣で、同じように肩を落とした茶髪がいた。"
+    },
+    {
+      "type": "line",
+      "text": "センパイも、小田原行き狙いっすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……いっかくや狙い"
+    },
+    {
+      "type": "line",
+      "text": "うちも、今日は家系の気分だったっす。寝不足で、体がキチゲの発散を欲してるっていうか",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "その言い回し、俺のブログの"
+    },
+    {
+      "type": "line",
+      "text": "引用っす。出典は明記したんで",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "十分待って、熱海行きに乗る。並んで座ると、電車の揺れが、寝不足の体にじわじわ効いてくる。"
+    },
+    {
+      "type": "line",
+      "text": "……センパイ、いつか仕事帰りに熱海まで行っちゃいそうって、書いてましたよね",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "書いた"
+    },
+    {
+      "type": "line",
+      "text": "うち、あれ読んで、ちょっとやってみたいって思ったっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "冗談だよ"
+    },
+    {
+      "type": "line",
+      "text": "知ってるっす。……ちょっと寝ていいっすか。川崎で起こしてください",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "そう言って、ひよりは目を閉じた。三十秒で、寝息が聞こえてきた。"
+    },
+    {
+      "type": "narration",
+      "text": "（川崎で、起こす。それだけだ）"
+    },
+    {
+      "type": "narration",
+      "text": "電車の揺れが、心地いい。寝不足。肩に、ひよりの頭の重み。"
+    },
+    {
+      "type": "narration",
+      "text": "……"
+    },
+    {
+      "type": "speech",
+      "speaker": "車内アナウンス",
+      "text": "ご乗車ありがとうございました。まもなく終点、熱海です"
+    },
+    {
+      "type": "line",
+      "text": "…………え？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "…………え？"
+    },
+    {
+      "type": "narration",
+      "text": "窓の外は、真っ暗な海だった。"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "起こせなくて、ごめん",
+          "reaction": {
+            "text": "……いや、うちも寝たんで。同罪っす。……てかセンパイも寝てたんすね。肩、貸し合ってたってことっすか",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "本当に熱海まで来ちゃったな",
+          "reaction": {
+            "text": "来ちゃいましたね。……ブログのネタ、拾っちゃったっすね。共同で",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "上りの終電、調べる",
+          "reaction": {
+            "text": "……センパイ、こういうとき冷静っすね。頼りになるっす。……ちょっとだけ、残念な気もするけど",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "上りの電車まで、三十分。改札の外に出ると、駅前の商店街はほとんど閉まっていた。"
+    },
+    {
+      "type": "line",
+      "text": "……いっかくや、ないっすね",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "熱海に、いっかくやはない"
+    },
+    {
+      "type": "line",
+      "text": "じゃあ、今日は家系じゃないやつ食べましょ。……センパイと熱海で晩ご飯って、なんか旅行みたいっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "一軒だけ開いていた定食屋で、アジフライ定食を二つ頼んだ。ご飯は、おかわり自由だった。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……ライス、おかわり自由"
+    },
+    {
+      "type": "line",
+      "text": "いっかくやより、いっかくやしてるっす",
+      "emotion": "smile"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "熱海、また来ない？",
+          "reaction": {
+            "text": "……今度は、寝過ごしじゃなくて、ちゃんと来たいっす。休みの日に。……センパイと",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "いっかくやより美味い",
+          "reaction": {
+            "text": "それ記事に書いたら、いっかくやガチ勢に怒られるっすよ。……うちは言わないっすけど",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "明日、二人とも寝不足だな",
+          "reaction": {
+            "text": "二人そろって遅刻寸前で出社したら、部長になんか言われるっすね。……まあ、いいっすけど",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "帰りの電車で、記事を書いた。タイトルは『いっかくや2』。記事の中では、ちゃんといっかくやに行ったことにした。"
+    },
+    {
+      "type": "narration",
+      "text": "本当は熱海でアジフライを食べていた。もはや、どこからどこまでが本当かわからない。……そういう記事になった。"
+    }
+  ]
+}

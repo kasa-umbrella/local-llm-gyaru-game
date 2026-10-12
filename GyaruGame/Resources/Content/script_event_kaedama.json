@@ -1,0 +1,200 @@
+{
+  "sceneID": "event_kaedama",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "九月の月曜。バーキンの、いつもの席。"
+    },
+    {
+      "type": "line",
+      "text": "で、品川、どうだったんすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "ワッパーを置く前に、ひよりが聞いてきた。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……なんで知ってるんだ"
+    },
+    {
+      "type": "line",
+      "text": "金曜の夜、センパイがチャットで『明日、替え玉してくる』って言ってたんで。ラーメンの話だと思ってたら、品川って",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "先週、知人に言われた。『マチアプで同じ日の同じ時間に二人と約束しちゃったから、片方行ってきてよ、かっさー』"
+    },
+    {
+      "type": "line",
+      "text": "カスじゃないっすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "最初に浮かんだ言葉は、それだった"
+    },
+    {
+      "type": "line",
+      "text": "で、なんで行くんすか",
+      "emotion": "angry"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……数秒後に、ブログのネタセンサーが発火した"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、ポテトを一本持ったまま、天を仰いだ。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "品川の店の前で、正直に言った。『今、違う人が来たって思いませんでしたか』って"
+    },
+    {
+      "type": "line",
+      "text": "言ったんすか",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "『あ、そんな感じしました』って返された。あまりにも冷静だった"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "替え玉だって説明して、謝って、『せっかく来てもらったので、飲んでいきませんか。奢るので』って"
+    },
+    {
+      "type": "line",
+      "text": "……それで？",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "普通に楽しく話して、ラストオーダーまでいた"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "誠実に対応したつもり",
+          "reaction": {
+            "text": "……誠実の基準が、ちょっとおかしいっすけど。逃げずに説明したのは、えらいと思うっす。ちょっとだけ",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "ネタとしては最高だった",
+          "reaction": {
+            "text": "最低っす！ ……読むけど。めっちゃ読むけど",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "相手の人、いい人だった",
+          "reaction": {
+            "text": "……ふーん。いい人だったんすね。ふーん。……ポテト、もう一本ください",
+            "emotion": "sad"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、ワッパーの包み紙をきっちり四つ折りにした。"
+    },
+    {
+      "type": "line",
+      "text": "……その人、なんでその知人の人とマッチしたんすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "『優しそうだったから』だって"
+    },
+    {
+      "type": "line",
+      "text": "他の女とダブルブッキングして別人を派遣する人が、優しいわけないっしょ",
+      "emotion": "angry"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "まったく同じことを、記事に書いた"
+    },
+    {
+      "type": "line",
+      "text": "で。……二回目は？",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "もし二回目のアポが取れたら、本物が行くらしい"
+    },
+    {
+      "type": "line",
+      "text": "二回目で本物が来る、激アツ展開……",
+      "emotion": "surprised"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは少し黙ってから、こっちを見た。"
+    },
+    {
+      "type": "line",
+      "text": "……センパイは、行かないんすよね。二回目",
+      "emotion": "shy"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "行かないよ",
+          "reaction": {
+            "text": "……ならいいっす。センパイが優しいのは、うちが知ってるんで。……知らない人に、わかられなくていいっす",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "呼ばれたら、ネタ的に",
+          "reaction": {
+            "text": "……は？ 行かせないっす。ネタセンサー、うちが物理的に止めるっす",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "本物のほうが優しそうだった",
+          "reaction": {
+            "text": "写真だけっしょ。……センパイのほうが、優しいっす。……替え玉なのに奢るとこが、特に",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "その夜、記事を公開した。タイトルは『替え玉アポイントメント』。副題は『本当に申し訳ありません』。"
+    },
+    {
+      "type": "narration",
+      "text": "冒頭には、注意書きを足した。『法に触れるような替え玉をしたわけではありません』。……ひよりに言われて。"
+    }
+  ]
+}

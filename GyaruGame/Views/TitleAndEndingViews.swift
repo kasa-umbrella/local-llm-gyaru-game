@@ -8,8 +8,6 @@ struct ContentView: View {
             switch game.screen {
             case .title:
                 TitleView()
-            case .heroineSelect:
-                HeroineSelectView()
             case .playing:
                 GameView()
             case .ending(let ending):
@@ -46,14 +44,14 @@ struct TitleView: View {
                 Spacer()
 
                 VStack(spacing: 14) {
-                    Button("はじめから", action: game.showHeroineSelect)
-                        .disabled(!game.isBackendReady)
+                    Button("はじめから", action: game.newGame)
+                        .disabled(!game.isModelReady)
                     Button("つづきから", action: game.continueGame)
-                        .disabled(!game.hasContinuableSave || !game.isBackendReady)
+                        .disabled(!game.hasContinuableSave || !game.isModelReady)
                 }
                 .buttonStyle(NovelButtonStyle(size: metrics.menuButtonSize, fontSize: 19))
 
-                EngineSelector()
+                ModelStatusView()
                     .padding(.top, metrics.isShort ? 14 : 28)
                     .padding(.bottom, metrics.screenPadding + 12)
             }
@@ -71,8 +69,8 @@ struct EndingView: View {
         NovelTheme.Metrics(horizontal: horizontalSizeClass, vertical: verticalSizeClass)
     }
 
-    private var heroine: Heroine? {
-        game.content.heroine(id: ending.heroineID)
+    private var route: Route? {
+        game.content.story.route(for: ending.route)
     }
 
     var body: some View {
@@ -81,12 +79,15 @@ struct EndingView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 20) {
-                if let heroine {
-                    HeroinePortrait(heroine: heroine, size: 104)
+                HeroinePortrait(heroine: game.heroine, size: 104)
+                VStack(spacing: 6) {
+                    Text(title)
+                        .font(NovelTheme.font(metrics.isCompact ? 28 : 36, bold: true))
+                        .foregroundStyle(NovelTheme.accent)
+                    Text("「\(route?.title ?? "")」ルート")
+                        .font(NovelTheme.font(metrics.isCompact ? 15 : 18))
+                        .foregroundStyle(NovelTheme.text)
                 }
-                Text(title)
-                    .font(NovelTheme.font(metrics.isCompact ? 28 : 36, bold: true))
-                    .foregroundStyle(NovelTheme.accent)
                 Text(message)
                     .font(NovelTheme.font(metrics.isCompact ? 15 : 18))
                     .foregroundStyle(NovelTheme.text)
@@ -106,16 +107,10 @@ struct EndingView: View {
         switch ending.kind {
         case .good: "GOOD END"
         case .normal: "NORMAL END"
-        case .bad: "BAD END"
         }
     }
 
     private var message: String {
-        let name = heroine?.name ?? ""
-        return switch ending.kind {
-        case .good: "花火が終わっても、\(name)はつないだ手を離さなかった。"
-        case .normal: "\(name)とは、また来週も会う約束をした。\n今はまだ、それで十分だった。"
-        case .bad: "\(name)が何を言いかけたのか、\n最後まで聞けないままだった。"
-        }
+        route?.endings[ending.kind.rawValue] ?? ""
     }
 }

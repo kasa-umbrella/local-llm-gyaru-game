@@ -1,0 +1,198 @@
+{
+  "sceneID": "event_kawasaki_thanks",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "月曜の朝。オフィスに入った瞬間、空気が違った。"
+    },
+    {
+      "type": "narration",
+      "text": "正確には、隣の席の空気だけが違った。"
+    },
+    {
+      "type": "narration",
+      "text": "金曜の夜、電車で記事を書いた。書くのに夢中で、一駅乗り過ごした。冒頭には、注意書きをつけた。『激下ネタ記事です。苦手な方は閲覧をご遠慮ください』"
+    },
+    {
+      "type": "narration",
+      "text": "（……注意書きは、つけた。つけたんだ）"
+    },
+    {
+      "type": "line",
+      "text": "……おはようございます、センパイ",
+      "emotion": "normal"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、こっちを見なかった。ディスプレイを見たまま、キーボードを打っている。打鍵音が、いつもより強い。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……おはよう"
+    },
+    {
+      "type": "narration",
+      "text": "沈黙。スコスコスコスコ、と打鍵音だけが響く。"
+    },
+    {
+      "type": "line",
+      "text": "読んだっす",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "…………"
+    },
+    {
+      "type": "line",
+      "text": "金曜の。川崎の。……『ありがとう、川崎』",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "全身の血が、足元に下がっていった。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "注意書き、つけたよね"
+    },
+    {
+      "type": "line",
+      "text": "つけてたっす。だから、覚悟して読んだっす。最後まで",
+      "emotion": "angry"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "最後まで……"
+    },
+    {
+      "type": "line",
+      "text": "全記事読むって決めてるんで。……一本だけ飛ばすの、なんか負けた気がして",
+      "emotion": "angry"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "本当に申し訳ない",
+          "reaction": {
+            "text": "……謝ることじゃないっす。センパイのブログなんで。うちが勝手に読んだだけなんで。……でも、ちょっとびっくりしたっす",
+            "emotion": "sad"
+          }
+        },
+        {
+          "text": "読まなくてよかったのに",
+          "reaction": {
+            "text": "読まなくていい記事なんて、センパイのブログに一本もないっす。……あれは、ちょっと、あったかもしれないけど",
+            "emotion": "angry"
+          }
+        },
+        {
+          "text": "あれもブログの一部だから",
+          "reaction": {
+            "text": "……開き直った。……でもまあ、そうっすね。あれ含めて、センパイの日常っすもんね。……知りたくなかったけど",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "昼休み。ひよりは、いつものバーキンに誘ってこなかった。"
+    },
+    {
+      "type": "narration",
+      "text": "（終わった。オンボーディング担当との関係が、終わった）"
+    },
+    {
+      "type": "narration",
+      "text": "十五時。チャットに、通知がひとつ。ひよりからだった。"
+    },
+    {
+      "type": "line",
+      "text": "『一個だけ、言っていいっすか』",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "『どうぞ』"
+    },
+    {
+      "type": "line",
+      "text": "『最後の段落の、本質的な価値提供には技術力が必要不可欠、ってとこ。仕事の話としては、ちょっとだけ刺さったっす』",
+      "emotion": "normal"
+    },
+    {
+      "type": "line",
+      "text": "『文脈は最悪っすけど』",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "隣の席を見ると、ひよりは耳まで赤くなっていた。"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "line",
+      "text": "……こっち見ないでください。仕事してください",
+      "emotion": "shy"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "仕事の話としては、ね",
+          "reaction": {
+            "text": "仕事の話としては、っす！ それ以外の部分は記憶から消去したんで。……消去中なんで、話しかけないでください",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "チャット、ありがとう",
+          "reaction": {
+            "text": "……どういたしまして。明日からは普通にするんで。センパイも普通にしてください。普通に",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "明日、バーキン行かない？",
+          "reaction": {
+            "text": "……行くっす。今日は気まずいんで、明日。……明日は、普通に行くっす",
+            "emotion": "sad"
+          }
+        },
+        {
+          "text": "もう下ネタは書かない",
+          "reaction": {
+            "text": "書かないは嘘っしょ。センパイ、ネタセンサー発火したら止まらないじゃないっすか。……注意書きだけは、絶対つけてください",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "その夜、新しいコメントはつかなかった。"
+    },
+    {
+      "type": "narration",
+      "text": "翌朝、ひよりはバーキンの割引クーポンを、無言で俺の机に置いていった。"
+    }
+  ]
+}

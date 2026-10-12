@@ -50,7 +50,9 @@ enum NovelTheme {
         var screenPadding: CGFloat { pick(short: 8, compact: 12, regular: 24) }
 
         // テキストウィンドウ（行数に関係なく固定）
-        var windowHeight: CGFloat { pick(short: 128, compact: 200, regular: 228) }
+        // 高さは 上の余白 + 本文 bodyLineLimit 行 + クイックメニュー + 下の余白に、少しゆとりを足したもの。
+        // 本文の1行はヒラギノ丸ゴで 15pt → 23, 21pt → 32。iPhone 縦は1行に18字ほどしか入らないので4行のまま
+        var windowHeight: CGFloat { pick(short: 116, compact: 200, regular: 184) }
         var windowMaxWidth: CGFloat { 1120 }
         var windowHorizontalPadding: CGFloat { pick(short: 28, compact: 24, regular: 44) }
         /// 名前プレートの下端から本文までの余白を含めた上の余白
@@ -58,7 +60,7 @@ enum NovelTheme {
         var windowBottomInset: CGFloat { pick(short: 8, compact: 12, regular: 14) }
         var bodyFontSize: CGFloat { pick(short: 15, compact: 17, regular: 21) }
         var bodyLineSpacing: CGFloat { pick(short: 2, compact: 5, regular: 7) }
-        var bodyLineLimit: Int { isShort ? 3 : 4 }
+        var bodyLineLimit: Int { pick(short: 2, compact: 4, regular: 2) }
 
         // 名前プレート
         var namePlateSize: CGSize {
@@ -83,6 +85,15 @@ enum NovelTheme {
             pick(short: CGSize(width: 200, height: 28), compact: CGSize(width: 220, height: 32), regular: CGSize(width: 300, height: 36))
         }
         var chapterFontSize: CGFloat { pick(short: 13, compact: 13, regular: 15) }
+
+        // 開発用のパラメータ表示（気分・3軸がそれぞれ同じ大きさの箱。左が色付きの項目名、右が白地の値）
+        var debugStatSize: CGSize {
+            pick(short: CGSize(width: 156, height: 26), compact: CGSize(width: 168, height: 30), regular: CGSize(width: 180, height: 32))
+        }
+        /// 項目名の部分の幅（残りが値の部分）
+        var debugStatLabelWidth: CGFloat { pick(short: 84, compact: 88, regular: 92) }
+        var debugStatValueFontSize: CGFloat { pick(short: 15, compact: 16, regular: 18) }
+        var debugStatSpacing: CGFloat { pick(short: 6, compact: 8, regular: 8) }
 
         // タイトル・エンディングのボタン
         var menuButtonSize: CGSize { isShort ? CGSize(width: 240, height: 44) : CGSize(width: 260, height: 52) }

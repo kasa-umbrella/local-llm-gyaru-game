@@ -1,0 +1,194 @@
+{
+  "sceneID": "event_design",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "残業の夜。オフィスに残っているのは、俺とひよりだけだった。"
+    },
+    {
+      "type": "narration",
+      "text": "仕事は、とっくに終わっていた。今やっているのは、ブログのトップページの改修だ。"
+    },
+    {
+      "type": "narration",
+      "text": "コメントで、デザイン系の人のサイトを教えてもらった。見てしまったら最後、自分のトップページがダサく見えてしかたない。"
+    },
+    {
+      "type": "line",
+      "text": "センパイ、それ業務じゃないっすよね",
+      "emotion": "normal"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "narration",
+      "text": "背後から、ひよりの声がした。椅子ごと、ぐいっとこっちに寄ってくる。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……休憩中"
+    },
+    {
+      "type": "line",
+      "text": "二時間休憩っすか。ホワイトっすね",
+      "emotion": "smile"
+    },
+    {
+      "type": "line",
+      "text": "で、何してるんすか。……あ、ヘッダーの下に、でかい画像入れたんだ",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "バナー。いろんなサイトを見たけど、これがあるとそれっぽくなる"
+    },
+    {
+      "type": "line",
+      "text": "しかも動いてる。これ、CSSで書いたんすか？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "Claude Codeに、めちゃくちゃざっくり投げた。『いい感じに動かして』って"
+    },
+    {
+      "type": "line",
+      "text": "ウケる。プロンプト、雑すぎっしょ",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりは、画面をじっと見つめた。"
+    },
+    {
+      "type": "line",
+      "text": "でも、この色。……微妙にグレー寄りの青っすね。使ってるの、黒と白と、青系だけ",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "色は、少ないほうがいい。カラーコードを一桁ずつ動かして、ちょうどいい濃さを探した"
+    },
+    {
+      "type": "line",
+      "text": "一桁ずつ？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "デザインって、結構気合だと思う。細かいとこを、しつこく直すのが大事"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "天宮さんはどう思う？",
+          "reaction": {
+            "text": "……うちは、好きっすよ。この色。センパイっぽい、ちょっと地味で、ちゃんとした色",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "気合で全部なんとかなる",
+          "reaction": {
+            "text": "根性論っすね。……でも、そういうの嫌いじゃないっす。うちもCI、半分気合で直してるとこあるんで",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "誰も気づかないけどな",
+          "reaction": {
+            "text": "うちは気づいたっすよ。……前の色より、目が疲れないっす。たぶんそれ、気合の成果っす",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "line",
+      "text": "じゃあ、うちも気合出していいっすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "返事をする前に、ひよりの指がトラックパッドに伸びていた。開発者ツールが開く。"
+    },
+    {
+      "type": "line",
+      "text": "余白。スマホで見たとき、ここの間、ちょっと空きすぎてないっすか",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "スマホのシミュレーターに切り替える。確かに、見出しと本文の間が間延びしている。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……PCだと気持ちいいのに"
+    },
+    {
+      "type": "line",
+      "text": "読者ほぼiPhoneなんで。スマホのときだけ、ちょい詰めましょ。メディアクエリ、うちが書くんで",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "ひよりの指が動く。数字が一つ変わるたびに、画面の余白が少しずつ締まっていく。"
+    },
+    {
+      "type": "narration",
+      "text": "気づいたら、終電の一本前だった。"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "手伝ってくれてありがとう",
+          "reaction": {
+            "text": "どういたしまして。……これ、うちの名前、どっかに載ります？ フッターの隅っことか",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "ネイルも気合入ってるな",
+          "reaction": {
+            "text": "え、急になんすか。……今週のは、センパイのバナーと同じ色にしたんすよ。偶然っす。偶然",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "自己満なんだけどな",
+          "reaction": {
+            "text": "自己満でいいじゃないっすか。うちも満足したんで、二人満足っす",
+            "emotion": "normal"
+          }
+        },
+        {
+          "text": "残業代は出ないよ",
+          "reaction": {
+            "text": "知ってるっす。……代わりに、明日のバーキン奢りで手を打つっす",
+            "emotion": "smile"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "その夜、デザインを変えた話を記事にした。最後に、こう書いた。『デザインって結構気合だと思っていて、ストイックに細かい修正をするのが大事だと思っています』"
+    },
+    {
+      "type": "narration",
+      "text": "スマホの余白を誰が直したかは、書かなかった。"
+    }
+  ]
+}

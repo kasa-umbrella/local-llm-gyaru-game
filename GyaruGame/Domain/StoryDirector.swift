@@ -2,44 +2,21 @@ import Foundation
 
 /// セーブデータから切り離した進行状態。StoryDirector はこれだけを見て判断する
 nonisolated struct GameProgress: Equatable, Sendable {
-    /// タイトル後に選んだヒロイン
-    var heroineID: String
-    var chapterIndex = 0
-    /// 選んだヒロインのシーンだけを数えたインデックス
+    /// この周回で流すシーンの順番（共通の導入＋引いたイベント。分岐後はルートのシーンが足される）
+    var sceneQueue: [String] = []
     var sceneIndex = 0
-    var turnInScene = 0
-    var affection = 0
-}
-
-nonisolated enum ScenePhase: String, Sendable {
-    case intro, development, closing
-
-    var instruction: String {
-        switch self {
-        case .intro: "シーンの導入。ヒロインから主人公に話しかけて場面を始める"
-        case .development: "会話を発展させ、シーンの目標に向かって少しずつ距離を縮める"
-        case .closing: "シーンの締め。主人公の返答に反応し、会話を自然に終わらせる"
-        }
-    }
-}
-
-/// LLM に渡す「演出指示」
-nonisolated struct SceneDirective: Sendable {
-    let chapterNumber: Int
-    let chapterTitle: String
-    let scene: SceneDefinition
-    let heroineID: String
-    let phase: ScenePhase
-    let turnsLeft: Int
+    /// 分岐のくじで決まったルート（分岐前は nil）
+    var route: Axis?
+    var feelings = Feelings()
 }
 
 nonisolated struct Ending: Equatable, Sendable {
-    enum Kind: Sendable {
-        case good, normal, bad
+    enum Kind: String, Sendable {
+        case good, normal
     }
 
     let kind: Kind
-    let heroineID: String
+    let route: Axis
 }
 
 nonisolated enum NextStep: Equatable, Sendable {
@@ -47,73 +24,71 @@ nonisolated enum NextStep: Equatable, Sendable {
     case ending(Ending)
 }
 
-/// 選んだヒロインのルートについて、章・シーン・ターンの進行を決定的に管理する「監督」
+/// 周回ごとの山札、シーンの順番、分岐のくじを決める「監督」。
+/// どの選択肢を選べばどのルートに行く、という対応は持たない。気持ちの3軸で重みを付けたくじで決める
 nonisolated struct StoryDirector: Sendable {
-    static let goodEndingThreshold = 55
-    static let normalEndingThreshold = 30
+    /// ルートの軸がこの値以上なら Good エンディング
+    static let goodEndingThreshold = 15
+    /// くじの重みの底上げ。大きいほど、いちばん高い軸以外のルートにも転びやすい
+    static let lotteryBase = 5
 
-    let chapters: [Chapter]
-
-    func chapter(for progress: GameProgress) -> Chapter? {
-        chapters[safe: progress.chapterIndex]
-    }
-
-    /// 章の中から、選んだヒロインが登場するシーンだけを取り出す
-    func scenes(in chapter: Chapter, for heroineID: String) -> [SceneDefinition] {
-        chapter.scenes.filter { $0.cast == heroineID || $0.cast == SceneDefinition.selectedHeroineCast }
-    }
+    let story: Story
 
     func scene(for progress: GameProgress) -> SceneDefinition? {
-        guard let chapter = chapter(for: progress) else { return nil }
-        return scenes(in: chapter, for: progress.heroineID)[safe: progress.sceneIndex]
+        progress.sceneQueue[safe: progress.sceneIndex].flatMap(story.scene(id:))
     }
 
-    func phase(for progress: GameProgress, in scene: SceneDefinition) -> ScenePhase {
-        if progress.turnInScene >= scene.turns { return .closing }
-        return progress.turnInScene == 0 ? .intro : .development
+    /// 新しい周回。山札からイベントを引き、原作の記事の月の順に並べる
+    func newGame(using random: inout some RandomNumberGenerator) -> GameProgress {
+        let drawn = story.deck.shuffled(using: &random).prefix(story.deckDrawCount)
+        let ordered = drawn
+            .compactMap(story.scene(id:))
+            .enumerated()
+            .sorted { ($0.element.month, $0.offset) < ($1.element.month, $1.offset) }
+            .map(\.element.id)
+        return GameProgress(sceneQueue: story.prologue + ordered)
     }
 
-    /// 締めのターン（選択肢を出さずにシーンを終える）かどうか
-    func isClosingTurn(_ progress: GameProgress) -> Bool {
-        guard let scene = scene(for: progress) else { return true }
-        return progress.turnInScene >= scene.turns
-    }
-
-    func directive(for progress: GameProgress) -> SceneDirective? {
-        guard let chapter = chapter(for: progress), let scene = scene(for: progress) else { return nil }
-        return SceneDirective(
-            chapterNumber: progress.chapterIndex + 1,
-            chapterTitle: chapter.title,
-            scene: scene,
-            heroineID: progress.heroineID,
-            phase: phase(for: progress, in: scene),
-            turnsLeft: max(scene.turns - progress.turnInScene, 0)
-        )
-    }
-
-    /// シーン終了後の遷移先を決める。そのヒロインのシーンがない章は飛ばす
-    func nextStep(after progress: GameProgress) -> NextStep {
+    /// シーン終了後の遷移先を決める。中盤のイベントを流し終えたら、くじでルートを決める
+    func nextStep(after progress: GameProgress, using random: inout some RandomNumberGenerator) -> NextStep {
         var next = progress
-        next.turnInScene = 0
         next.sceneIndex += 1
-
-        while let chapter = chapter(for: next) {
-            if next.sceneIndex < scenes(in: chapter, for: next.heroineID).count {
+        if next.sceneIndex < next.sceneQueue.count {
+            return .scene(next)
+        }
+        if next.route == nil {
+            let axis = drawRoute(for: next.feelings, using: &random)
+            next.route = axis
+            let scenes = story.route(for: axis)?.scenes ?? []
+            if !scenes.isEmpty {
+                next.sceneQueue += scenes
                 return .scene(next)
             }
-            next.chapterIndex += 1
-            next.sceneIndex = 0
         }
-        return .ending(ending(for: progress))
+        return .ending(ending(for: next))
+    }
+
+    /// くじの重み。いちばん低い軸を基準に、差分＋底上げの分だけ当たりやすくする
+    func routeWeights(for feelings: Feelings) -> [Axis: Int] {
+        let lowest = Axis.allCases.map { feelings[$0] }.min() ?? 0
+        return Dictionary(uniqueKeysWithValues: Axis.allCases.map { ($0, feelings[$0] - lowest + Self.lotteryBase) })
+    }
+
+    func drawRoute(for feelings: Feelings, using random: inout some RandomNumberGenerator) -> Axis {
+        let weights = routeWeights(for: feelings)
+        var ticket = Int.random(in: 0..<weights.values.reduce(0, +), using: &random)
+        for axis in Axis.allCases {
+            let weight = weights[axis] ?? 0
+            if ticket < weight { return axis }
+            ticket -= weight
+        }
+        return feelings.strongest
     }
 
     func ending(for progress: GameProgress) -> Ending {
-        let kind: Ending.Kind = switch progress.affection {
-        case Self.goodEndingThreshold...: .good
-        case Self.normalEndingThreshold...: .normal
-        default: .bad
-        }
-        return Ending(kind: kind, heroineID: progress.heroineID)
+        let route = progress.route ?? progress.feelings.strongest
+        let kind: Ending.Kind = progress.feelings[route] >= Self.goodEndingThreshold ? .good : .normal
+        return Ending(kind: kind, route: route)
     }
 }
 

@@ -5,3 +5,13 @@ DerivedData/
 build/
 *.xcresult
 .DS_Store
+
+# ブログのDBダンプ（非公開記事を含むので絶対にコミットしない）
+*.sql
+
+# Web版
+web/node_modules/
+web/dist/
+
+# ブログのDBダンプから書き出した記事（非公開記事を含む）
+blog/

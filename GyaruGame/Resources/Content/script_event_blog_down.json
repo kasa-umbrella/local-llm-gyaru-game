@@ -1,0 +1,200 @@
+{
+  "sceneID": "event_blog_down",
+  "beats": [
+    {
+      "type": "narration",
+      "text": "七月の金曜、二十時。帰り支度をしていると、スマホが震えた。ひよりから、チャット。"
+    },
+    {
+      "type": "line",
+      "text": "『センパイ、ブログ落ちてるっす』",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "隣の席を見る。本人は、隣にいる。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……口で言えばいいのに"
+    },
+    {
+      "type": "enter"
+    },
+    {
+      "type": "line",
+      "text": "記録に残したかったんで。障害報告は、チャットで",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "ブラウザで開く。真っ白な画面に、502 Bad Gateway。"
+    },
+    {
+      "type": "line",
+      "text": "『可用性80%くらいで運用していきます』って、再開のときに書いてたっすよね。……今日は0%っす",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "再開の記事まで読んでるのか"
+    },
+    {
+      "type": "line",
+      "text": "全記事読むって言ったじゃないっすか。……で、構成、なんでしたっけ。フロントがNext.jsで、バックがFastAPI",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "さくらのVPSに、Dockerで。フロントとバックとDB、三つのコンテナを全部一台に載せてる"
+    },
+    {
+      "type": "line",
+      "text": "全部一台！？",
+      "emotion": "surprised"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "予算の関係上、筋肉構成"
+    },
+    {
+      "type": "line",
+      "text": "筋肉構成ってなんすか。ウケる。……スペックは？",
+      "emotion": "smile"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "最初はメモリ1G、CPU2コアの一番安いやつ。遅すぎて、メモリ2Gにスケールアップした"
+    },
+    {
+      "type": "line",
+      "text": "で、また足りなくなったと",
+      "emotion": "normal"
+    },
+    {
+      "type": "narration",
+      "text": "SSHでつなぐ。ひよりが、俺のMacBookを覗き込む。dockerのログ。メモリ不足で、バックエンドのコンテナが落ちていた。"
+    },
+    {
+      "type": "line",
+      "text": "アクセス、増えてるんじゃないっすか。最近、更新多いし",
+      "emotion": "normal"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "天宮さんがリロードしすぎ",
+          "reaction": {
+            "text": "し、してないっす！ ……一日三回くらいっす。……五回かも",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "サーバー代、月2300円なんだ",
+          "reaction": {
+            "text": "月2300円で、うちの毎日の楽しみが支えられてるんすね。……コスパ、ガチでいいっす",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "一緒に見てくれる？",
+          "reaction": {
+            "text": "当たり前じゃないっすか。うち、インフラ好きなんで。……センパイのブログだから、っていうのもあるけど",
+            "emotion": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "type": "narration",
+      "text": "二人で、原因を追う。記事一覧を開くたびに、DBのクエリが全件を読んでいた。"
+    },
+    {
+      "type": "line",
+      "text": "これ、ページングしてないっす。アクセスログのテーブルも、毎回一緒に引いてる",
+      "emotion": "normal"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……管理画面、Claude Codeをしばき回して作らせたとこだ"
+    },
+    {
+      "type": "line",
+      "text": "しばき回したら、しばき返されたっすね",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "クエリを直して、コンテナを立ち上げ直す。docker compose up --build。全部が、一発で動く。"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……Docker、マジで便利だな"
+    },
+    {
+      "type": "line",
+      "text": "『今も涙が止まりません』って書いてたやつっすね",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "ブラウザを更新する。トップページのバナーが、ゆっくり動き出した。"
+    },
+    {
+      "type": "narration",
+      "text": "時計を見ると、二十二時を過ぎていた。オフィスには、もう誰もいない。"
+    },
+    {
+      "type": "choice",
+      "options": [
+        {
+          "text": "助かった。天宮さんのおかげ",
+          "reaction": {
+            "text": "……障害対応、二人でやるの、ちょっと楽しかったっす。……ちょっとだけ",
+            "emotion": "shy"
+          }
+        },
+        {
+          "text": "次は監視を入れる",
+          "reaction": {
+            "text": "えらい。……アラート、うちのスマホにも飛ぶようにしといてください。センパイより先に気づく自信あるんで",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "お礼に、晩ご飯奢る",
+          "reaction": {
+            "text": "言いましたね。……博多風龍、バリカタで。替え玉、無料のとこまで",
+            "emotion": "smile"
+          }
+        },
+        {
+          "text": "可用性、80%に戻ったな",
+          "reaction": {
+            "text": "100%にしてくださいよ。……うちが読みたいときに、ちゃんと開いてないと困るんで",
+            "emotion": "angry"
+          }
+        }
+      ]
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "翌日、障害報告の記事を書いた。原因、対応、再発防止策。"
+    },
+    {
+      "type": "narration",
+      "text": "『謝辞』の欄を作るか迷って、作らなかった。代わりに、最後に一行だけ足した。『いつも読んでくれて、ありがとうございます』"
+    }
+  ]
+}
