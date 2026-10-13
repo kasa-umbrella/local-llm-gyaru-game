@@ -7,19 +7,20 @@ struct StoryDirectorTests {
         SceneDefinition(id: id, location: id, background: "", month: month)
     }
 
-    private static func route(_ axis: Axis, scenes: [String]) -> Route {
-        Route(axis: axis, title: axis.label, scenes: scenes, endings: ["good": "good", "normal": "normal"])
+    private static func route(_ axis: Axis, scenes: [String], endingScenes: [String: String]? = nil) -> Route {
+        Route(axis: axis, title: axis.label, scenes: scenes, endings: ["good": "good", "normal": "normal"], endingScenes: endingScenes)
     }
 
     private let director = StoryDirector(story: Story(
         prologue: ["p1", "p2"],
         deck: ["e_jul", "e_may", "e_jun", "e_aug"],
         deckDrawCount: 3,
-        routes: [route(.tokimeki, scenes: ["r_t"]), route(.trust, scenes: []), route(.nori, scenes: ["r_n1", "r_n2"])],
+        routes: [route(.tokimeki, scenes: ["r_t"], endingScenes: ["good": "r_t_good", "normal": "r_t_normal"]), route(.trust, scenes: []), route(.nori, scenes: ["r_n1", "r_n2"])],
         scenes: [
             scene("p1", month: 4), scene("p2", month: 5),
             scene("e_may", month: 5), scene("e_jun", month: 6), scene("e_jul", month: 7), scene("e_aug", month: 8),
-            scene("r_t", month: 9), scene("r_n1", month: 9), scene("r_n2", month: 10),
+            scene("r_t", month: 9), scene("r_t_good", month: 9), scene("r_t_normal", month: 9),
+            scene("r_n1", month: 9), scene("r_n2", month: 10),
         ]
     ))
 
@@ -57,6 +58,24 @@ struct StoryDirectorTests {
         var random = SeededGenerator(seed: 1)
         let progress = GameProgress(sceneQueue: ["p1"], feelings: Feelings(tokimeki: 0, trust: 90, nori: 0))
         #expect(director.nextStep(after: progress, using: &random) == .ending(Ending(kind: .good, route: .trust)))
+    }
+
+    /// ルートのシーンを流し終えたら結末が決まり、その結末のシーンを流してからエンディングになる
+    @Test(arguments: [(StoryDirector.goodEndingThreshold, Ending.Kind.good, "r_t_good"), (0, .normal, "r_t_normal")])
+    func playsEndingSceneBeforeEnding(value: Int, kind: Ending.Kind, endingScene: String) {
+        var random = SeededGenerator(seed: 1)
+        let progress = GameProgress(sceneQueue: ["p1", "r_t"], sceneIndex: 1, route: .tokimeki, feelings: Feelings(tokimeki: value))
+        guard case .scene(let next) = director.nextStep(after: progress, using: &random) else {
+            Issue.record("結末のシーンに進んでいない")
+            return
+        }
+        #expect(director.scene(for: next)?.id == endingScene)
+        #expect(next.endingKind == kind)
+
+        // 結末のシーンの間に気持ちが動いても、決まった結末は変わらない
+        var after = next
+        after.feelings = Feelings(tokimeki: 99 - value)
+        #expect(director.nextStep(after: after, using: &random) == .ending(Ending(kind: kind, route: .tokimeki)))
     }
 
     @Test func weightsFavorStrongestAxisButKeepOthersPossible() {

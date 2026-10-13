@@ -205,24 +205,8 @@ struct DebugStatsRow: View {
     private var stats: [Stat] {
         [Stat(title: "気分", icon: "face.smiling", color: Color(hex: "#F6E3A1"), value: mood.label, change: 0)]
             + Axis.allCases.map { axis in
-                Stat(title: axis.label, icon: Self.icon(for: axis), color: Self.color(for: axis), value: "\(feelings[axis])", change: delta?[axis] ?? 0)
+                Stat(title: axis.label, icon: axis.iconName, color: axis.color, value: "\(feelings[axis])", change: delta?[axis] ?? 0)
             }
-    }
-
-    private static func icon(for axis: Axis) -> String {
-        switch axis {
-        case .tokimeki: "heart.fill"
-        case .trust: "shield.fill"
-        case .nori: "sparkles"
-        }
-    }
-
-    private static func color(for axis: Axis) -> Color {
-        switch axis {
-        case .tokimeki: Color(hex: "#F4A7AE")
-        case .trust: Color(hex: "#A9DDF3")
-        case .nori: Color(hex: "#D3EBB0")
-        }
     }
 
     private func box(_ stat: Stat) -> some View {
@@ -264,5 +248,53 @@ struct DebugStatsRow: View {
 private extension Array {
     func chunked(by size: Int) -> [[Element]] {
         stride(from: 0, to: count, by: size).map { Array(self[$0..<Swift.min($0 + size, count)]) }
+    }
+}
+
+/// 選んだ選択肢でひよりの気持ちが動いた軸を、立ち絵の上にふわっと出して消す。数字は出さず、矢印の数で強さを表す
+struct FeelingFeedbackView: View {
+    let metrics: NovelTheme.Metrics
+    let feedback: FeelingFeedback?
+
+    /// 出ている時間
+    private static let visibleDuration: Duration = .seconds(1.6)
+    private static let downFill = Color(white: 0.15).opacity(0.85)
+    private static let labelText = Color(white: 0.2)
+
+    @State private var shown: FeelingFeedback?
+
+    var body: some View {
+        HStack(spacing: 8) {
+            if let shown {
+                ForEach(shown.changes, id: \.axis) { change in
+                    chip(axis: change.axis, delta: change.delta)
+                }
+            }
+        }
+        .opacity(shown == nil ? 0 : 1)
+        .offset(y: shown == nil ? 8 : 0)
+        .animation(.easeOut(duration: 0.3), value: shown)
+        .task(id: feedback) {
+            guard let feedback else { return }
+            shown = feedback
+            try? await Task.sleep(for: Self.visibleDuration)
+            guard !Task.isCancelled else { return }
+            shown = nil
+        }
+        .allowsHitTesting(false)
+    }
+
+    private func chip(axis: Axis, delta: Int) -> some View {
+        let isUp = delta > 0
+        return HStack(spacing: 4) {
+            Image(systemName: axis.iconName)
+                .foregroundStyle(isUp ? Self.labelText : axis.color)
+            Text(String(repeating: isUp ? "↑" : "↓", count: abs(delta)))
+                .foregroundStyle(isUp ? Self.labelText : NovelTheme.text)
+        }
+        .font(.system(size: metrics.feedbackFontSize, weight: .bold))
+        .frame(width: metrics.feedbackChipSize.width, height: metrics.feedbackChipSize.height)
+        .background(isUp ? axis.color : Self.downFill, in: .capsule)
+        .accessibilityLabel("\(axis.label)が\(isUp ? "上がった" : "下がった")")
     }
 }

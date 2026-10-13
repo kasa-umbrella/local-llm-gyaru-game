@@ -8,6 +8,8 @@ nonisolated struct GameProgress: Equatable, Sendable {
     /// 分岐のくじで決まったルート（分岐前は nil）
     var route: Axis?
     var feelings = Feelings()
+    /// ルートのシーンを流し終えた時点で決まった結末（それまでは nil）
+    var endingKind: Ending.Kind?
 }
 
 nonisolated struct Ending: Equatable, Sendable {
@@ -49,7 +51,8 @@ nonisolated struct StoryDirector: Sendable {
         return GameProgress(sceneQueue: story.prologue + ordered)
     }
 
-    /// シーン終了後の遷移先を決める。中盤のイベントを流し終えたら、くじでルートを決める
+    /// シーン終了後の遷移先を決める。中盤のイベントを流し終えたら、くじでルートを決める。
+    /// ルートのシーンを流し終えたら結末（GOOD / NORMAL）を決め、その結末のシーンがあれば流してからエンディングにする
     func nextStep(after progress: GameProgress, using random: inout some RandomNumberGenerator) -> NextStep {
         var next = progress
         next.sceneIndex += 1
@@ -62,6 +65,14 @@ nonisolated struct StoryDirector: Sendable {
             let scenes = story.route(for: axis)?.scenes ?? []
             if !scenes.isEmpty {
                 next.sceneQueue += scenes
+                return .scene(next)
+            }
+        }
+        if next.endingKind == nil {
+            let ending = ending(for: next)
+            next.endingKind = ending.kind
+            if let sceneID = story.route(for: ending.route)?.endingScenes?[ending.kind.rawValue] {
+                next.sceneQueue.append(sceneID)
                 return .scene(next)
             }
         }
@@ -85,9 +96,10 @@ nonisolated struct StoryDirector: Sendable {
         return feelings.strongest
     }
 
+    /// 結末がもう決まっていればそれを使う（結末のシーンとエンディング画面を食い違わせない）
     func ending(for progress: GameProgress) -> Ending {
         let route = progress.route ?? progress.feelings.strongest
-        let kind: Ending.Kind = progress.feelings[route] >= Self.goodEndingThreshold ? .good : .normal
+        let kind = progress.endingKind ?? (progress.feelings[route] >= Self.goodEndingThreshold ? .good : .normal)
         return Ending(kind: kind, route: route)
     }
 }

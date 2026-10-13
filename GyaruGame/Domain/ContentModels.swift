@@ -36,8 +36,10 @@ nonisolated struct Route: Codable, Sendable {
     let title: String
     /// ルートに入ってから順に流すシーン
     let scenes: [String]
-    /// "good" / "normal" のエンディングの文
+    /// "good" / "normal" のエンディング画面に出す一文
     let endings: [String: String]
+    /// "good" / "normal" の結末のシーン。ルートのシーンを流し終えて結末が決まったあとに流す
+    let endingScenes: [String: String]?
 }
 
 /// 物語の骨組み。共通の導入 → 山札から引いたイベント → 分岐したルート の順に進む

@@ -43,6 +43,8 @@ final class GameViewModel {
     private(set) var isTransitioning = false
     /// 直前の選択肢の判定（開発用の表示に使う）
     private(set) var lastJudgment: Feelings?
+    /// 直前の判定で動いた軸（立ち絵の上に出す）。判定が出るたびに作り直すので、同じ結果が続いても毎回表示される
+    private(set) var feelingFeedback: FeelingFeedback?
 
     private var slot: SaveSlot?
     private var sceneScript: SceneScript?
@@ -221,6 +223,7 @@ final class GameViewModel {
             guard !Task.isCancelled else { return }
             progress.feelings = progress.feelings.adding(delta)
             lastJudgment = delta
+            feelingFeedback = FeelingFeedback(delta: delta)
         })
     }
 
@@ -319,5 +322,21 @@ final class GameViewModel {
         if showNow { cursor = script.count - 1 }
         guard let slot, let scene, let speaker = line.speaker else { return }
         repository.appendLog(to: slot, sceneID: scene.id, speaker: speaker, text: line.text, emotion: line.emotion)
+    }
+}
+
+/// 選択肢の判定で動いた軸。どれも動かなかったときは作らない
+nonisolated struct FeelingFeedback: Equatable, Sendable {
+    struct Change: Equatable, Sendable {
+        let axis: Axis
+        let delta: Int
+    }
+
+    let id = UUID()
+    let changes: [Change]
+
+    init?(delta: Feelings) {
+        changes = Axis.allCases.compactMap { delta[$0] == 0 ? nil : Change(axis: $0, delta: delta[$0]) }
+        if changes.isEmpty { return nil }
     }
 }

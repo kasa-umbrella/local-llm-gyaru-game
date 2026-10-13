@@ -29,8 +29,12 @@
         "tokimeki_crossing"
       ],
       "endings": {
-        "good": "その夜、ブログを更新した。タイトルは、ひよりが決めた。\n『固め濃いめ多めな後輩と、硬め普通少なめな俺』\n数分後、コメントがついた。『業務時間外です。次の日曜は、バーキンで。』",
-        "normal": "日曜十七時のサイクルには、ときどき後輩が混ざるようになった。\nそれが何なのかは、まだブログに書けずにいる。"
+        "good": "ブログのタイトルは、\n今日もひよりが決めている。",
+        "normal": "日曜十七時のサイクルは、二人分。\n続きは、まだ書けずにいる。"
+      },
+      "endingScenes": {
+        "good": "tokimeki_good",
+        "normal": "tokimeki_normal"
       }
     },
     {
@@ -41,8 +45,12 @@
         "trust_gakushi"
       ],
       "endings": {
-        "good": "月曜の朝、隣の席からレビュー依頼が飛んできた。\nタイトルは『要件定義：これからのふたり』。Approveは、即日だった。",
-        "normal": "デスクの上とCI/CDは、今日も整っている。\n隣の席との距離だけは、まだ要件が決まっていない。"
+        "good": "隣の席からのレビュー依頼は、\n今日も即日Approve。",
+        "normal": "隣の席との距離は、\nまだレビュー中だ。"
+      },
+      "endingScenes": {
+        "good": "trust_good",
+        "normal": "trust_normal"
       }
     },
     {
@@ -53,8 +61,12 @@
         "nori_sunday"
       ],
       "endings": {
-        "good": "ブログに、共同執筆者が増えた。\n同じ日曜を、二つの目線で書いている。コメント欄は、だいたいラーメンの話だ。",
-        "normal": "ネタ探しには、だいたい後輩がついてくる。\nそれが何なのかは、まだお互い、記事に書けずにいる。"
+        "good": "ブログに、共同執筆者が増えた。\n同じ日曜を、二つの目線で書いている。",
+        "normal": "ネタ探しには、だいたい後輩がいる。\nその下書きは、まだ非公開だ。"
+      },
+      "endingScenes": {
+        "good": "nori_good",
+        "normal": "nori_normal"
       }
     }
   ],
@@ -81,13 +93,13 @@
       "id": "tokimeki_biryani",
       "location": "ラ・チッタ・デッラ",
       "background": "station_square_evening",
-      "month": 7
+      "month": 9
     },
     {
       "id": "tokimeki_crossing",
       "location": "ラ・チッタ・デッラへ向かう交差点",
       "background": "crossing_night_open",
-      "month": 9
+      "month": 10
     },
     {
       "id": "event_burgerking",
@@ -187,6 +199,42 @@
     },
     {
       "id": "nori_sunday",
+      "location": "夜のラ・チッタ・デッラ",
+      "background": "station_square_night",
+      "month": 10
+    },
+    {
+      "id": "tokimeki_good",
+      "location": "ラ・チッタ・デッラへ向かう交差点",
+      "background": "crossing_night_open",
+      "month": 10
+    },
+    {
+      "id": "tokimeki_normal",
+      "location": "ラ・チッタ・デッラへ向かう交差点",
+      "background": "crossing_night_open",
+      "month": 10
+    },
+    {
+      "id": "trust_good",
+      "location": "横浜駅西口",
+      "background": "station_concourse",
+      "month": 10
+    },
+    {
+      "id": "trust_normal",
+      "location": "横浜駅西口",
+      "background": "station_concourse",
+      "month": 10
+    },
+    {
+      "id": "nori_good",
+      "location": "夜のラ・チッタ・デッラ",
+      "background": "station_square_night",
+      "month": 10
+    },
+    {
+      "id": "nori_normal",
       "location": "夜のラ・チッタ・デッラ",
       "background": "station_square_night",
       "month": 10

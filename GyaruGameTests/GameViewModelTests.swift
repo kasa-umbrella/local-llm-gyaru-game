@@ -30,10 +30,22 @@ struct GameViewModelTests {
     @Test func everyStorySceneHasScript() throws {
         let content = try GameContent.loadFromBundle()
         let story = content.story
-        let ids = story.prologue + story.deck + story.routes.flatMap(\.scenes)
+        let ids = story.prologue + story.deck + story.routes.flatMap { $0.scenes + ($0.endingScenes ?? [:]).values.sorted() }
         for id in ids {
             #expect(story.scene(id: id) != nil, "\(id) が story.json の scenes にない")
             #expect(content.script(for: id) != nil, "\(id) のシナリオがない")
+        }
+    }
+
+    /// 山札は引いた順に関係なく月の順に並ぶので、ルートに入ってから月が逆戻りしないよう、ルートの最初のシーンは山札のいちばん遅い月以降にする
+    @Test func routesNeverGoBackInTime() throws {
+        let story = try GameContent.loadFromBundle().story
+        let deckMonths = story.deck.compactMap { story.scene(id: $0)?.month }
+        let latestDeckMonth = try #require(deckMonths.max())
+        for route in story.routes {
+            let months = (route.scenes + (route.endingScenes ?? [:]).values.sorted()).compactMap { story.scene(id: $0)?.month }
+            #expect(months.first.map { $0 >= latestDeckMonth } ?? true, "\(route.axis) のルートが山札より前の月から始まる")
+            #expect(months == months.sorted(), "\(route.axis) のルートの中で月が逆戻りする")
         }
     }
 
@@ -58,6 +70,8 @@ struct GameViewModelTests {
         // 判定は裏で行われ、気持ちに足される
         for _ in 0..<200 where game.progress.feelings == Feelings() { try await Task.sleep(for: .milliseconds(5)) }
         #expect(game.progress.feelings == Feelings(tokimeki: 1, trust: 0, nori: 2))
+        // 動いた軸だけが、表示用の結果になる（信頼は 0 なので出さない）
+        #expect(game.feelingFeedback?.changes == [.init(axis: .tokimeki, delta: 1), .init(axis: .nori, delta: 2)])
         #expect(judge.requests.first?.playerLine == picked.text)
         #expect(judge.requests.first?.scene.id == "prologue_office")
     }
@@ -88,6 +102,8 @@ struct GameViewModelTests {
         game.choose(game.choices[0])
         try await play(game) { game.scene?.id != "prologue_office" }
         #expect(game.progress.feelings == Feelings())
+        // どの軸も動かなかったときは、何も表示しない
+        #expect(game.feelingFeedback == nil)
     }
 
     /// ときめきだけが上がり続けると、山札のあとでときめきのルートに入り、Good エンディングになる
@@ -109,8 +125,11 @@ struct GameViewModelTests {
             return
         }
         #expect(ending.route == game.progress.route)
+        // ルートのシーンのあとに、決まった結末のシーンが流れてからエンディングになる
+        let route = try #require(story.route(for: ending.route))
+        let endingScene = try #require(route.endingScenes?[ending.kind.rawValue])
+        #expect(Array(visited.suffix(route.scenes.count + 1)) == route.scenes + [endingScene])
         if ending.route == .tokimeki {
-            #expect(Array(visited.suffix(2)) == story.route(for: .tokimeki)?.scenes)
             #expect(ending.kind == .good)
         }
         #expect(!game.hasContinuableSave)

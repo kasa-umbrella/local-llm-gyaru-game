@@ -47,6 +47,10 @@ struct GameView: View {
             }
             .animation(.easeOut(duration: 0.45), value: game.isHeroineOnStage)
 
+            FeelingFeedbackView(metrics: metrics, feedback: game.feelingFeedback)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding(.top, metrics.feedbackTopInset)
+
             VStack(spacing: 0) {
                 header
                 Spacer(minLength: metrics.isShort ? 4 : 12)

@@ -95,6 +95,14 @@ enum NovelTheme {
         var debugStatValueFontSize: CGFloat { pick(short: 15, compact: 16, regular: 18) }
         var debugStatSpacing: CGFloat { pick(short: 6, compact: 8, regular: 8) }
 
+        // 選択肢の判定結果（動いた軸ごとに同じ大きさのピル）
+        var feedbackChipSize: CGSize {
+            pick(short: CGSize(width: 76, height: 30), compact: CGSize(width: 80, height: 34), regular: CGSize(width: 96, height: 40))
+        }
+        var feedbackFontSize: CGFloat { pick(short: 14, compact: 15, regular: 18) }
+        /// 画面の上端からの位置（ひよりの顔のあたり）
+        var feedbackTopInset: CGFloat { pick(short: 64, compact: 150, regular: 130) }
+
         // タイトル・エンディングのボタン
         var menuButtonSize: CGSize { isShort ? CGSize(width: 240, height: 44) : CGSize(width: 260, height: 52) }
 
@@ -175,5 +183,26 @@ struct QuickMenuButtonStyle: ButtonStyle {
             .lineLimit(1)
             .frame(width: size.width, height: size.height)
             .contentShape(.rect)
+    }
+}
+
+// MARK: - 気持ちの軸の見た目
+
+extension Axis {
+    /// パラメータ表示と判定結果のアイコンで共通に使う
+    var iconName: String {
+        switch self {
+        case .tokimeki: "heart.fill"
+        case .trust: "shield.fill"
+        case .nori: "sparkles"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .tokimeki: Color(hex: "#F4A7AE")
+        case .trust: Color(hex: "#A9DDF3")
+        case .nori: Color(hex: "#D3EBB0")
+        }
     }
 }

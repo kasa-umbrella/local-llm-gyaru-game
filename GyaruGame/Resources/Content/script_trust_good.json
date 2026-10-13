@@ -1,0 +1,43 @@
+{
+  "sceneID": "trust_good",
+  "beats": [
+    {
+      "type": "enter"
+    },
+    {
+      "type": "line",
+      "text": "……要件、言っていいっすか",
+      "emotion": "shy"
+    },
+    {
+      "type": "line",
+      "text": "隣の席。業務時間外も。……センパイの彼女、っていう枠で",
+      "emotion": "shy"
+    },
+    {
+      "type": "speech",
+      "speaker": "player",
+      "text": "……承認します"
+    },
+    {
+      "type": "line",
+      "text": "即日Approveっすね。……レビュー、甘すぎないっすか？ ふふ",
+      "emotion": "smile"
+    },
+    {
+      "type": "narration",
+      "text": "もう一曲だけ聴いてから、改札に向かった。帰りの電車で、ひよりはずっと、俺の袖をつまんでいた。"
+    },
+    {
+      "type": "exit"
+    },
+    {
+      "type": "narration",
+      "text": "その夜、学士デートの記事を書いた。最後に、こう書いた。『今まで面倒だと思っていたことは、プロセスを前に進める上で非常に重要であることに気づいたのです』"
+    },
+    {
+      "type": "narration",
+      "text": "時代は冷笑ではない、熱笑。……数分後、コメントがついた。『要件、承認済みです』"
+    }
+  ]
+}

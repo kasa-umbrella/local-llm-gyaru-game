@@ -8,6 +8,7 @@ final class SaveSlot {
     var sceneQueue: [String] = []
     var sceneIndex: Int = 0
     var routeRaw: String?
+    var endingKindRaw: String?
     var tokimeki: Int = 0
     var trust: Int = 0
     var nori: Int = 0
@@ -26,7 +27,8 @@ final class SaveSlot {
             sceneQueue: sceneQueue,
             sceneIndex: sceneIndex,
             route: routeRaw.flatMap(Axis.init(rawValue:)),
-            feelings: Feelings(tokimeki: tokimeki, trust: trust, nori: nori)
+            feelings: Feelings(tokimeki: tokimeki, trust: trust, nori: nori),
+            endingKind: endingKindRaw.flatMap(Ending.Kind.init(rawValue:))
         )
     }
 
@@ -34,6 +36,7 @@ final class SaveSlot {
         sceneQueue = progress.sceneQueue
         sceneIndex = progress.sceneIndex
         routeRaw = progress.route?.rawValue
+        endingKindRaw = progress.endingKind?.rawValue
         tokimeki = progress.feelings.tokimeki
         trust = progress.feelings.trust
         nori = progress.feelings.nori
