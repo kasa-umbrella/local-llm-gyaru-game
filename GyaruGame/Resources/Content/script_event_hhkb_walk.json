@@ -116,6 +116,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さんの好み、知りたくて",
@@ -143,6 +144,10 @@
     {
       "type": "narration",
       "text": "結局、濃いめの一杯をなんとか完食して、ライス大を平らげて退店した。"
+    },
+    {
+      "type": "background",
+      "name": "station_square_night"
     },
     {
       "type": "narration",
@@ -173,6 +178,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "HHKBも満足したと思う",

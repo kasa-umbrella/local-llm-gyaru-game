@@ -74,6 +74,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "一緒に住めば折半できる",
@@ -147,6 +148,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "日曜、空けとく",

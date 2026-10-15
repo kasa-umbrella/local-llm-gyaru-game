@@ -80,7 +80,7 @@
     {
       "id": "prologue_ikkakuya",
       "location": "いっかくや",
-      "background": "station_square_night",
+      "background": "office_building_day",
       "month": 5
     },
     {
@@ -128,7 +128,7 @@
     {
       "id": "event_hhkb_walk",
       "location": "川崎の銀柳街",
-      "background": "station_square_night",
+      "background": "station_square_evening",
       "month": 5
     },
     {
@@ -146,7 +146,7 @@
     {
       "id": "event_atami",
       "location": "熱海駅のホーム",
-      "background": "station_platform_night_lights_on",
+      "background": "office_building_day",
       "month": 6
     },
     {
@@ -158,7 +158,7 @@
     {
       "id": "event_summer",
       "location": "江ノ島へ続く道",
-      "background": "riverside_evening",
+      "background": "riverside_day",
       "month": 8
     },
     {
@@ -176,19 +176,19 @@
     {
       "id": "event_remote",
       "location": "ヨドバシ帰りのスタバ",
-      "background": "station_square_evening",
+      "background": "office_building_night",
       "month": 9
     },
     {
       "id": "trust_prompt",
       "location": "休日出勤のオフィス",
-      "background": "office_building_night",
+      "background": "office_building_day",
       "month": 9
     },
     {
       "id": "trust_gakushi",
       "location": "横浜駅西口",
-      "background": "station_concourse",
+      "background": "office_building_night",
       "month": 10
     },
     {
@@ -200,7 +200,7 @@
     {
       "id": "nori_sunday",
       "location": "夜のラ・チッタ・デッラ",
-      "background": "station_square_night",
+      "background": "room_day",
       "month": 10
     },
     {
@@ -218,13 +218,13 @@
     {
       "id": "trust_good",
       "location": "横浜駅西口",
-      "background": "station_concourse",
+      "background": "station_square_night",
       "month": 10
     },
     {
       "id": "trust_normal",
       "location": "横浜駅西口",
-      "background": "station_concourse",
+      "background": "station_square_night",
       "month": 10
     },
     {

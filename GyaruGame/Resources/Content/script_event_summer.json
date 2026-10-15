@@ -26,6 +26,10 @@
       "text": "電車が、鎌倉駅に止まった。——ブログのネタ、探しに行くか。"
     },
     {
+      "type": "background",
+      "name": "riverside_evening"
+    },
+    {
       "type": "narration",
       "text": "気づいたら、改札を出ていた。七里ヶ浜まで歩いて、セブンで缶のお酒を買う。夕方の海を見ながら、江ノ島のほうへ歩く。"
     },
@@ -112,6 +116,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さんは、よく見てるな",
@@ -195,6 +200,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "積極的にいけって言われた",

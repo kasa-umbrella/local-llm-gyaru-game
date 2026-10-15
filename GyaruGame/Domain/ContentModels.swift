@@ -66,6 +66,8 @@ nonisolated struct GameContent: Sendable {
     let story: Story
     /// シーンID → 人が書いたシナリオ
     let scripts: [String: SceneScript]
+    /// 自由入力への反応のセリフ集
+    let freeReplies: FreeReplies
 
     func script(for sceneID: String) -> SceneScript? {
         scripts[sceneID]
@@ -75,7 +77,8 @@ nonisolated struct GameContent: Sendable {
         GameContent(
             heroine: try decode("heroine", from: bundle),
             story: try decode("story", from: bundle),
-            scripts: try loadScripts(from: bundle)
+            scripts: try loadScripts(from: bundle),
+            freeReplies: try decode("free_replies", from: bundle)
         )
     }
 

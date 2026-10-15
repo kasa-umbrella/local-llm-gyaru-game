@@ -45,6 +45,10 @@
       "emotion": "smile"
     },
     {
+      "type": "background",
+      "name": "station_square_night"
+    },
+    {
       "type": "narration",
       "text": "ヨドバシカメラ。照明用の汎用リモコン、千五百九十円。ポイントで払う。"
     },
@@ -120,6 +124,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "怒られるのも、悪くない",
@@ -165,6 +170,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "じゃあ、今夜試していい？",

@@ -118,6 +118,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "替え玉、もう一回いく？",
@@ -187,6 +188,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "俺も入れる。共犯な",

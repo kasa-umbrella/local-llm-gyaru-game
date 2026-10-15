@@ -86,6 +86,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さんはどう思う？",
@@ -152,6 +153,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "手伝ってくれてありがとう",

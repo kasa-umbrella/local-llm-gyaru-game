@@ -14,6 +14,10 @@
       "text": "結局二十時半まで残業して、水道橋から総武線、秋葉原で京浜東北線に乗り換えて川崎へ。改札を出て、東口のとある場所へ走る。"
     },
     {
+      "type": "background",
+      "name": "station_square_night"
+    },
+    {
       "type": "narration",
       "text": "そう、いっかくやである。"
     },
@@ -91,6 +95,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "油で誤魔化してないか？",
@@ -167,6 +172,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "これ、ブログに書いていい？",

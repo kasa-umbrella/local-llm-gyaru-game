@@ -87,6 +87,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さんがリロードしすぎ",
@@ -154,6 +155,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "助かった。天宮さんのおかげ",

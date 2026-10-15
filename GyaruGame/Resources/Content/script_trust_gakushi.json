@@ -100,6 +100,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "分析しないと、立ち直れない",
@@ -128,6 +129,10 @@
       "type": "line",
       "text": "……センパイ、ちょっと付き合ってください。横浜まで",
       "emotion": "normal"
+    },
+    {
+      "type": "background",
+      "name": "station_square_night"
     },
     {
       "type": "narration",

@@ -10,6 +10,10 @@
       "text": "朝十時に起きた。まずまずのスタート。ご飯を食べて、二時間ギターの練習をした。……眠くなった。"
     },
     {
+      "type": "background",
+      "name": "room_evening"
+    },
+    {
       "type": "narration",
       "text": "仕事の夢を見て、目を覚ました。時計を見ると、十八時。"
     },
@@ -25,6 +29,10 @@
       "type": "line",
       "text": "『センパイ』『センパイ』『起きてます？』『今日、プロデュースの日っすよ』『川崎駅、中央改札。十八時半』",
       "emotion": "angry"
+    },
+    {
+      "type": "background",
+      "name": "station_square_night"
     },
     {
       "type": "narration",
@@ -78,6 +86,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "まだ探してる途中",

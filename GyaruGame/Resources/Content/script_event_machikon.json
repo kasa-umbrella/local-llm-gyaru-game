@@ -88,6 +88,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "笑ってくれていいよ",
@@ -181,6 +182,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "『安心？』",

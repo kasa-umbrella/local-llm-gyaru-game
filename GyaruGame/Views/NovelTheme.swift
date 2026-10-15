@@ -79,6 +79,10 @@ enum NovelTheme {
         }
         var choiceFontSize: CGFloat { pick(short: 15, compact: 16, regular: 20) }
         var choiceSpacing: CGFloat { pick(short: 8, compact: 12, regular: 16) }
+        /// 自由入力の「やめる」「伝える」。2つ並べて選択肢の幅にぴったり収まる
+        var freeInputActionSize: CGSize {
+            CGSize(width: (choiceSize.width - choiceSpacing) / 2, height: choiceSize.height)
+        }
 
         // 章プレート
         var chapterPlateSize: CGSize {

@@ -67,6 +67,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "ここで中身のある話をしよう",
@@ -136,6 +137,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "本当のことだから",

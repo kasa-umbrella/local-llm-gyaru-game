@@ -70,6 +70,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さんの要件、教えてくれる？",
@@ -93,6 +94,10 @@
           }
         }
       ]
+    },
+    {
+      "type": "background",
+      "name": "office_building_evening"
     },
     {
       "type": "narration",
@@ -122,6 +127,10 @@
       "emotion": "sad"
     },
     {
+      "type": "background",
+      "name": "office_building_night"
+    },
+    {
       "type": "narration",
       "text": "修正して、テストを書いて、ステージングで確認して。全部終わったのは、二十三時近くだった。"
     },
@@ -142,6 +151,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "一人じゃないから",

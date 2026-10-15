@@ -9,6 +9,9 @@ struct GameView: View {
     @State private var showsBacklog = false
     @State private var isAutoOn = false
     @State private var isSkipOn = false
+    /// 選択肢の代わりに、自由入力の欄を出しているか
+    @State private var isComposing = false
+    @FocusState private var isRootFocused: Bool
 
     private static let playerNameColor = Color(white: 0.55)
 
@@ -26,9 +29,9 @@ struct GameView: View {
 
     var body: some View {
         ZStack {
-            SceneBackgroundView(name: game.scene?.background ?? "")
+            SceneBackgroundView(name: game.background)
                 .ignoresSafeArea()
-                .animation(.easeInOut(duration: 0.6), value: game.scene?.id)
+                .animation(.easeInOut(duration: 0.6), value: game.background)
 
             // 立ち絵は画面下端まで伸ばし、下半身は半透明のテキストウィンドウ越しに見せる。
             // 登場は左からスライドイン、退場はフェードアウト
@@ -55,10 +58,19 @@ struct GameView: View {
                 header
                 Spacer(minLength: metrics.isShort ? 4 : 12)
                 if game.showsChoices {
-                    ChoiceList(metrics: metrics, choices: game.choices) { choice in
-                        game.choose(choice)
+                    if isComposing {
+                        FreeInputBar(metrics: metrics, onSubmit: submitFreeInput, onCancel: stopComposing)
+                            .transition(.opacity)
+                    } else {
+                        ChoiceList(
+                            metrics: metrics,
+                            choices: game.choices,
+                            onFreeInput: game.allowsFreeInput ? { isComposing = true } : nil
+                        ) { choice in
+                            game.choose(choice)
+                        }
+                        .transition(.opacity)
                     }
-                    .transition(.opacity)
                 }
                 Spacer(minLength: metrics.isShort ? 4 : 12)
                 dialogueWindow
@@ -66,6 +78,7 @@ struct GameView: View {
             }
             .padding(metrics.screenPadding)
             .animation(.easeOut(duration: 0.18), value: game.showsChoices)
+            .animation(.easeOut(duration: 0.18), value: isComposing)
 
             if game.isTransitioning {
                 loadingOverlay
@@ -86,14 +99,17 @@ struct GameView: View {
         .onChange(of: lineKey, initial: true) { updateTypewriter() }
         .onChange(of: game.currentLine?.text) { updateTypewriter() }
         .onChange(of: game.showsChoices) { _, shows in
-            if shows { isSkipOn = false }
+            if shows { isSkipOn = false } else { isComposing = false }
         }
         .task(id: AutoAdvanceKey(lineKey: lineKey, isTyping: typewriter.isTyping, canAdvance: game.canAdvance, isAutoOn: isAutoOn, isSkipOn: isSkipOn)) {
             await autoAdvanceIfNeeded()
         }
         .focusable()
         .focusEffectDisabled()
+        .focused($isRootFocused)
         .onKeyPress(keys: [.space, .return]) { _ in
+            // 自由入力の欄を開いている間は、キーは入力に使う
+            guard !isComposing else { return .ignored }
             handleAdvance()
             return .handled
         }
@@ -172,7 +188,9 @@ struct GameView: View {
     }
 
     private var indicator: DialogueWindow.Indicator {
-        !typewriter.isTyping && game.canAdvance ? .next : .none
+        guard !typewriter.isTyping else { return .none }
+        if game.isAwaitingReaction { return .thinking }
+        return game.canAdvance ? .next : .none
     }
 
     private var loadingOverlay: some View {
@@ -193,6 +211,17 @@ struct GameView: View {
     }
 
     // MARK: - 進行
+
+    private func submitFreeInput(_ text: String) {
+        game.submitFreeInput(text)
+        stopComposing()
+    }
+
+    /// 入力欄を閉じて、Space / Return で読み進められるようにキー入力を画面に戻す
+    private func stopComposing() {
+        isComposing = false
+        isRootFocused = true
+    }
 
     private func updateTypewriter() {
         typewriter.show(game.currentLine?.text ?? "", key: lineKey, instant: isSkipOn)

@@ -65,6 +65,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "バーナム効果って知ってる？ 誰にでも当てはまるように書いてあるんだよ",
@@ -114,6 +115,10 @@
       "emotion": "shy"
     },
     {
+      "type": "background",
+      "name": "station_square_night"
+    },
+    {
       "type": "narration",
       "text": "チネチッタのレイトショーを並んで観て、外に出ると、二十二時を過ぎていた。駅へ向かう道、夜の銀柳街。"
     },
@@ -152,6 +157,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "助かった、ありがとう",

@@ -74,6 +74,8 @@ struct DialogueWindow: View {
 
     enum Indicator {
         case none, next
+        /// ひよりの反応を待っている
+        case thinking
     }
 
     var body: some View {
@@ -119,6 +121,12 @@ struct DialogueWindow: View {
                 .foregroundStyle(NovelTheme.accent)
                 .symbolEffect(.bounce, options: .repeating.speed(0.6))
                 .frame(width: 16, height: 16)
+        case .thinking:
+            Image(systemName: "ellipsis")
+                .font(.system(size: 14))
+                .foregroundStyle(NovelTheme.accent)
+                .symbolEffect(.pulse, options: .repeating)
+                .frame(width: 16, height: 16)
         }
     }
 
@@ -154,10 +162,11 @@ struct NamePlate: View {
     }
 }
 
-/// 選択肢。すべて同じ幅・高さの横長バー
+/// 選択肢。すべて同じ幅・高さの横長バー。`onFreeInput` があれば、末尾に自分の言葉で伝えるバーを足す
 struct ChoiceList: View {
     let metrics: NovelTheme.Metrics
     let choices: [ChoiceOption]
+    var onFreeInput: (() -> Void)?
     let onSelect: (ChoiceOption) -> Void
 
     var body: some View {
@@ -166,7 +175,73 @@ struct ChoiceList: View {
                 Button(choice.text) { onSelect(choice) }
                     .buttonStyle(NovelButtonStyle(size: metrics.choiceSize, fontSize: metrics.choiceFontSize))
             }
+            if let onFreeInput {
+                Button(action: onFreeInput) {
+                    Label("自分の言葉で伝える", systemImage: "square.and.pencil")
+                        .foregroundStyle(NovelTheme.accent)
+                }
+                .buttonStyle(NovelButtonStyle(size: metrics.choiceSize, fontSize: metrics.choiceFontSize))
+            }
         }
+    }
+}
+
+/// 自分の言葉で伝える入力欄。選択肢と同じ幅の入力バーと、その下に「やめる」「伝える」を並べる。
+/// 入力は `FreeInput.characterLimit` 文字まで。Return でも送れる
+struct FreeInputBar: View {
+    let metrics: NovelTheme.Metrics
+    let onSubmit: (String) -> Void
+    let onCancel: () -> Void
+
+    @State private var draft = ""
+    @FocusState private var isFocused: Bool
+
+    private var canSubmit: Bool {
+        FreeInput.sanitized(draft) != nil
+    }
+
+    var body: some View {
+        VStack(spacing: metrics.choiceSpacing) {
+            HStack(spacing: 8) {
+                TextField("", text: $draft, prompt: Text("ひよりに伝えたいこと").foregroundStyle(NovelTheme.subText))
+                    .textFieldStyle(.plain)
+                    .font(NovelTheme.font(metrics.choiceFontSize))
+                    .foregroundStyle(NovelTheme.text)
+                    .focused($isFocused)
+                    .submitLabel(.send)
+                    .onSubmit(submit)
+                    #if os(macOS)
+                    .onExitCommand(perform: onCancel)
+                    #endif
+                Text("\(draft.count)/\(FreeInput.characterLimit)")
+                    .font(NovelTheme.font(NovelTheme.minimumFontSize))
+                    .monospacedDigit()
+                    .foregroundStyle(NovelTheme.subText)
+            }
+            .padding(.horizontal, 16)
+            .frame(width: metrics.choiceSize.width, height: metrics.choiceSize.height)
+            .novelPanel(cornerRadius: 10, highlighted: true)
+
+            HStack(spacing: metrics.choiceSpacing) {
+                Button("やめる", action: onCancel)
+                    .buttonStyle(NovelButtonStyle(size: metrics.freeInputActionSize, fontSize: metrics.choiceFontSize))
+                Button("伝える", action: submit)
+                    .buttonStyle(NovelButtonStyle(size: metrics.freeInputActionSize, fontSize: metrics.choiceFontSize, isSelected: canSubmit))
+                    .disabled(!canSubmit)
+            }
+        }
+        .onChange(of: draft) { _, text in
+            if text.count > FreeInput.characterLimit {
+                draft = String(text.prefix(FreeInput.characterLimit))
+            }
+        }
+        // 表示された直後だと、macOS では入力欄にフォーカスが渡らないことがあるので、描画のあとで渡す
+        .task { isFocused = true }
+    }
+
+    private func submit() {
+        guard canSubmit else { return }
+        onSubmit(draft)
     }
 }
 

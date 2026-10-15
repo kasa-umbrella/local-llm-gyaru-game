@@ -69,7 +69,7 @@
     },
     {
       "type": "line",
-      "text": "あ、それセンパイのせいじゃないっす。テストのキャッシュ、壊れてるだけなんで",
+      "text": "あ、それセンパイのせいじゃないっす。CIのキャッシュ、壊れてるだけなんで",
       "emotion": "normal"
     },
     {
@@ -87,6 +87,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さん、しごできだな",
@@ -110,6 +111,10 @@
           }
         }
       ]
+    },
+    {
+      "type": "background",
+      "name": "office_building_night"
     },
     {
       "type": "narration",
@@ -153,6 +158,10 @@
     {
       "type": "narration",
       "text": "そして、無刻印。理由は、キーマップを変えても印字とズレないから。あと、なんかかっこいいから。比率で言うと一対九くらい。（やめといたほうがいい、と言われた気がする）"
+    },
+    {
+      "type": "background",
+      "name": "office_building_day"
     },
     {
       "type": "narration",
@@ -204,6 +213,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "無刻印はロマンだから",
@@ -230,6 +240,10 @@
     },
     {
       "type": "exit"
+    },
+    {
+      "type": "background",
+      "name": "office_building_night"
     },
     {
       "type": "narration",

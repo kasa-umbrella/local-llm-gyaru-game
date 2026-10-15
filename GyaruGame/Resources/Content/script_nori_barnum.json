@@ -70,6 +70,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "天宮さん、文章うまいな",
@@ -129,6 +130,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "空いてる。何をやらかせばいい？",

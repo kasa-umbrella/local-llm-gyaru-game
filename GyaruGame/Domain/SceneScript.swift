@@ -15,7 +15,8 @@ nonisolated struct ChoiceOption: Identifiable, Equatable, Sendable {
     let text: String
 }
 
-/// 人が書いたシーンのシナリオ。セリフ・選択肢・反応はすべてここで決め、LLM は選んだ結果の判定だけを担当する。
+/// 人が書いたシーンのシナリオ。セリフ・選択肢・反応はすべてここで決め、LLM は選んだ結果の判定だけを担当する
+/// （自由入力では、反応の種類を選ぶところまで。セリフは `free_replies.json` の人が書いたもの）。
 /// バンドル内の `script_<シーンID>.json` から読み込む。
 nonisolated struct SceneScript: Codable, Sendable {
     let sceneID: String
@@ -30,19 +31,23 @@ nonisolated enum ScriptBeat: Codable, Sendable {
     case line(ScriptLine)
     /// ヒロイン以外のセリフ（主人公や脇役）。そのまま出す
     case speech(ScriptSpeech)
-    /// 主人公の選択肢の候補。4つ以上書いておくと、毎回そこから3つをランダムに出す
-    case choice([ScriptChoice])
+    /// 主人公の選択肢の候補。4つ以上書いておくと、毎回そこから3つをランダムに出す。
+    /// `allowsFreeInput` なら、選択肢のほかに「自分の言葉で伝える」入力欄も出す
+    case choice([ScriptChoice], allowsFreeInput: Bool)
     /// ヒロインが画面に出てくる。シーンの頭では画面にいないので、出したいところに書く
     case enter
     /// ヒロインが画面からいなくなる
     case exit
+    /// 背景を切り替える（アセット `bg_<name>` の name）。時間が進んだり場所を移ったりするところに書く。
+    /// シーンの頭の背景は story.json の `background`
+    case background(String)
 
     private enum CodingKeys: String, CodingKey {
-        case type, text, emotion, options, speaker
+        case type, text, emotion, options, speaker, freeInput, name
     }
 
     private enum BeatType: String, Codable {
-        case narration, line, speech, choice, enter, exit
+        case narration, line, speech, choice, enter, exit, background
     }
 
     init(from decoder: Decoder) throws {
@@ -61,11 +66,16 @@ nonisolated enum ScriptBeat: Codable, Sendable {
                 text: try container.decode(String.self, forKey: .text)
             ))
         case .choice:
-            self = .choice(try container.decode([ScriptChoice].self, forKey: .options))
+            self = .choice(
+                try container.decode([ScriptChoice].self, forKey: .options),
+                allowsFreeInput: try container.decodeIfPresent(Bool.self, forKey: .freeInput) ?? false
+            )
         case .enter:
             self = .enter
         case .exit:
             self = .exit
+        case .background:
+            self = .background(try container.decode(String.self, forKey: .name))
         }
     }
 
@@ -83,13 +93,17 @@ nonisolated enum ScriptBeat: Codable, Sendable {
             try container.encode(BeatType.speech, forKey: .type)
             try container.encode(speech.speaker, forKey: .speaker)
             try container.encode(speech.text, forKey: .text)
-        case .choice(let options):
+        case .choice(let options, let allowsFreeInput):
             try container.encode(BeatType.choice, forKey: .type)
+            if allowsFreeInput { try container.encode(true, forKey: .freeInput) }
             try container.encode(options, forKey: .options)
         case .enter:
             try container.encode(BeatType.enter, forKey: .type)
         case .exit:
             try container.encode(BeatType.exit, forKey: .type)
+        case .background(let name):
+            try container.encode(BeatType.background, forKey: .type)
+            try container.encode(name, forKey: .name)
         }
     }
 }

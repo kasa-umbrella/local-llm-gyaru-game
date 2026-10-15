@@ -83,6 +83,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "本当に申し訳ない",
@@ -160,6 +161,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "仕事の話としては、ね",

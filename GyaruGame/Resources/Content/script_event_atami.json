@@ -14,6 +14,10 @@
       "text": "今日はダメな日だ。定時まで働いて、退勤。待望のいっかくやへ。"
     },
     {
+      "type": "background",
+      "name": "station_platform_night_lights_on"
+    },
+    {
       "type": "narration",
       "text": "今日は、東京駅から東海道線で帰る気分だった。激しい早歩きでホームに駆け上がる。小田原行きが、目の前で発車した。"
     },
@@ -120,6 +124,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "起こせなくて、ごめん",
@@ -179,6 +184,7 @@
     },
     {
       "type": "choice",
+      "freeInput": true,
       "options": [
         {
           "text": "熱海、また来ない？",
